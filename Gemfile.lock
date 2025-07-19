@@ -346,7 +346,7 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   kamal
-  pg (~> 1.1)
+  pg
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
