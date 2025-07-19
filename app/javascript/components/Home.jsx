@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Button } from "flowbite-react";
+
 
 export default () => (
   <div className="w-screen h-screen bg-primary flex items-center justify-center">
@@ -17,6 +19,9 @@ export default () => (
         >
           Link Test
         </Link>
+        <Button className="mt-4" color="light">
+          Flowbite Button
+        </Button>
       </div>
     </div>
   </div>
