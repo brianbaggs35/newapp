@@ -1,24 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button } from "flowbite-react";
 
-
 export default () => (
-  <div className="w-screen h-screen bg-primary flex items-center justify-center">
+  <div className="w-screen h-screen bg-white flex items-center justify-center">
     <div className="bg-transparent">
-      <div className="container text-secondary">
+      <div className="container text-gray-800">
         <h1 className="text-5xl font-bold mb-4">Test App</h1>
         <p className="text-xl mb-4">
           Test application for using React on Rails.
         </p>
         <hr className="my-4 border-t border-gray-300" />
-        <Link
-          to="/newlink"
-          className="btn btn-lg bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700 transition"
+        <a
+          href="/newlink"
+          className="btn btn-lg bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700 transition inline-block mr-4"
           role="button"
         >
-          Link Test
-        </Link>
+          Link Test (Rails Route)
+        </a>
         <Button className="mt-4" color="light">
           Flowbite Button
         </Button>
