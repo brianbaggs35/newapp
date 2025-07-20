@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Badge, Button, Card, Modal, Textarea } from 'flowbite-react';
-import { HiEye, HiClock, HiCheckCircle, HiXCircle, HiExclamationTriangle } from 'react-icons/hi';
+import { HiEye, HiClock, HiCheckCircle, HiXCircle, HiExclamation } from 'react-icons/hi';
 
 const TestCaseDetails = ({ testSuite, testCases }) => {
   const [selectedTestCase, setSelectedTestCase] = useState(null);
@@ -16,7 +16,7 @@ const TestCaseDetails = ({ testSuite, testCases }) => {
       passed: { color: 'success', icon: HiCheckCircle, text: 'Passed' },
       failed: { color: 'failure', icon: HiXCircle, text: 'Failed' },
       error: { color: 'failure', icon: HiXCircle, text: 'Error' },
-      skipped: { color: 'warning', icon: HiExclamationTriangle, text: 'Skipped' },
+      skipped: { color: 'warning', icon: HiExclamation, text: 'Skipped' },
       pending: { color: 'gray', icon: HiClock, text: 'Pending' },
     };
 

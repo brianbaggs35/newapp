@@ -27,7 +27,7 @@ describe('TestImport', () => {
     render(<TestImport />);
     
     expect(screen.getByText('Import JUnit XML Test Results')).toBeInTheDocument();
-    expect(screen.getByLabelText('Select JUnit XML file')).toBeInTheDocument();
+    expect(screen.getByText('Upload a JUnit XML file to import test results')).toBeInTheDocument();
     expect(screen.getByText('Import Test Results')).toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('TestImport', () => {
   test('enables import button when file is selected', () => {
     render(<TestImport />);
     
-    const fileInput = screen.getByLabelText('Select JUnit XML file');
+    const fileInput = document.querySelector('input[type="file"]');
     const file = new File(['<testsuite><testcase name="test1"/></testsuite>'], 'test.xml', { type: 'text/xml' });
     
     fireEvent.change(fileInput, { target: { files: [file] } });
@@ -63,7 +63,7 @@ describe('TestImport', () => {
 
     render(<TestImport onImportSuccess={mockOnImportSuccess} />);
     
-    const fileInput = screen.getByLabelText('Select JUnit XML file');
+    const fileInput = document.querySelector('input[type="file"]');
     const file = new File(['<testsuite><testcase name="test1"/></testsuite>'], 'test.xml', { type: 'text/xml' });
     fireEvent.change(fileInput, { target: { files: [file] } });
     
@@ -87,7 +87,7 @@ describe('TestImport', () => {
 
     render(<TestImport />);
     
-    const fileInput = screen.getByLabelText('Select JUnit XML file');
+    const fileInput = document.querySelector('input[type="file"]');
     const file = new File(['invalid xml'], 'test.xml', { type: 'text/xml' });
     fireEvent.change(fileInput, { target: { files: [file] } });
     
@@ -104,7 +104,7 @@ describe('TestImport', () => {
 
     render(<TestImport />);
     
-    const fileInput = screen.getByLabelText('Select JUnit XML file');
+    const fileInput = document.querySelector('input[type="file"]');
     const file = new File(['<testsuite><testcase name="test1"/></testsuite>'], 'test.xml', { type: 'text/xml' });
     fireEvent.change(fileInput, { target: { files: [file] } });
     

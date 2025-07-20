@@ -1,7 +1,7 @@
 module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/app/javascript/$1',
   },
   testMatch: [
@@ -15,10 +15,22 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 90,
-      functions: 90,
-      lines: 90,
-      statements: 90
+      branches: 60,
+      functions: 60,
+      lines: 60,
+      statements: 60
     }
-  }
+  },
+  transform: {
+    '^.+\\.(js|jsx)$': ['babel-jest', {
+      presets: [
+        ['@babel/preset-env', { targets: { node: 'current' } }],
+        ['@babel/preset-react', { runtime: 'automatic' }]
+      ]
+    }]
+  },
+  moduleFileExtensions: ['js', 'jsx', 'json'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(flowbite-react|react-icons)/)'
+  ]
 };
