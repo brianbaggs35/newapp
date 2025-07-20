@@ -51,7 +51,18 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # RSpec for testing
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
+
+group :test do
+  gem "simplecov", require: false
+end
+
+# XML parsing for JUnit files
+gem "nokogiri"
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
