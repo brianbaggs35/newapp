@@ -19,16 +19,6 @@
   color: #FFF;
   border: none;
 }
-.hero {
-  width: 100vw;
-  height: 50vh;
-}
-.hero img {
-  object-fit: cover;
-  object-position: top;
-  height: 100%;
-  width: 100%;
-}
 .overlay {
   height: 100%;
   width: 100%;
