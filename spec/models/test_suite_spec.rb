@@ -25,7 +25,7 @@ RSpec.describe TestSuite, type: :model do
 
   describe '#update_statistics!' do
     let(:test_suite) { create(:test_suite) }
-    
+
     before do
       create(:test_case, test_suite: test_suite, status: :passed, duration: 1.5)
       create(:test_case, test_suite: test_suite, status: :failed, duration: 2.0)
@@ -34,7 +34,7 @@ RSpec.describe TestSuite, type: :model do
 
     it 'updates test counts correctly' do
       test_suite.update_statistics!
-      
+
       expect(test_suite.total_tests).to eq(3)
       expect(test_suite.passed_tests).to eq(1)
       expect(test_suite.failed_tests).to eq(1)

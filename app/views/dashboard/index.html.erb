@@ -1,0 +1,15 @@
+<% content_for :title, "Dashboard" %>
+
+<div id="dashboard-root"></div>
+
+<script type="module">
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import Dashboard from '../javascript/components/Dashboard.jsx';
+  
+  const currentUser = <%= raw current_user.to_json %>;
+  
+  const container = document.getElementById('dashboard-root');
+  const root = createRoot(container);
+  root.render(React.createElement(Dashboard, { currentUser }));
+</script>

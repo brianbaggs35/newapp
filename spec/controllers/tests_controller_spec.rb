@@ -8,7 +8,7 @@ RSpec.describe TestsController, type: :controller do
     it 'returns all test suites' do
       get :index
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response.length).to eq(1)
       expect(json_response.first['name']).to eq(test_suite.name)
@@ -19,7 +19,7 @@ RSpec.describe TestsController, type: :controller do
     it 'returns test suite with test cases' do
       get :show, params: { id: test_suite.id }
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['test_suite']['name']).to eq(test_suite.name)
       expect(json_response['test_cases'].length).to eq(3)
@@ -42,7 +42,7 @@ RSpec.describe TestsController, type: :controller do
         </testsuite>
       XML
     end
-    
+
     let(:xml_file) { fixture_file_upload('test.xml', 'text/xml', xml_content) }
 
     before do
@@ -58,11 +58,11 @@ RSpec.describe TestsController, type: :controller do
     it 'successfully imports valid XML' do
       post :import, params: { xml_file: xml_file }
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['message']).to include('Successfully imported')
       expect(json_response['test_suites'].length).to eq(1)
-      
+
       imported_suite = TestSuite.find_by(name: 'ImportedSuite')
       expect(imported_suite).to be_present
       expect(imported_suite.test_cases.count).to eq(2)
@@ -71,23 +71,23 @@ RSpec.describe TestsController, type: :controller do
     it 'returns error when no file provided' do
       post :import
       expect(response).to have_http_status(:bad_request)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['error']).to eq('No XML file provided')
     end
 
     it 'returns error for invalid XML' do
       invalid_file = fixture_file_upload('invalid.xml', 'text/xml', 'invalid xml content')
-      
+
       # Create a temporary invalid file
       File.write(Rails.root.join('spec', 'fixtures', 'invalid.xml'), 'invalid xml content')
-      
+
       post :import, params: { xml_file: invalid_file }
       expect(response).to have_http_status(:unprocessable_entity)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['error']).to include('Failed to parse XML')
-      
+
       # Clean up
       File.delete(Rails.root.join('spec', 'fixtures', 'invalid.xml'))
     end
@@ -98,7 +98,7 @@ RSpec.describe TestsController, type: :controller do
       expect {
         delete :destroy, params: { id: test_suite.id }
       }.to change(TestSuite, :count).by(-1)
-      
+
       expect(response).to have_http_status(:no_content)
     end
   end
@@ -112,7 +112,7 @@ RSpec.describe TestsController, type: :controller do
     it 'returns test statistics' do
       get :statistics
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['total_suites']).to eq(1)
       expect(json_response['total_tests']).to eq(5) # 3 + 2 new ones
@@ -130,7 +130,7 @@ RSpec.describe TestsController, type: :controller do
     file = Tempfile.new(filename)
     file.write(content)
     file.rewind
-    
+
     ActionDispatch::Http::UploadedFile.new(
       tempfile: file,
       filename: filename,
