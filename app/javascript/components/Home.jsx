@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "flowbite-react";
 import TestDashboard from "./tests/TestDashboard";
+import ReactDemo from "./ReactDemo";
 
 export default () => (
   <div className="w-screen min-h-screen bg-gray-50 flex flex-col">
@@ -29,7 +30,10 @@ export default () => (
 
     {/* Main Content */}
     <div className="flex-1 bg-gray-50">
-      <TestDashboard />
+      <div className="container mx-auto px-4 py-8">
+        <ReactDemo />
+        <TestDashboard />
+      </div>
     </div>
   </div>
 );
