@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "flowbite-react";
 import TestDashboard from "./tests/TestDashboard";
 import ReactDemo from "./ReactDemo";
-import Navigation from "./Navigation";
+import NavigationSimple from "./NavigationSimple";
 
 export default () => {
   const currentUser = window.currentUser || null;
@@ -26,7 +26,7 @@ export default () => {
 
   return (
     <div className="w-screen min-h-screen bg-gray-50 flex flex-col">
-      <Navigation currentUser={currentUser} onLogout={handleLogout} />
+      <NavigationSimple currentUser={currentUser} onLogout={handleLogout} />
       
       {/* Header */}
       <div className="bg-white shadow-sm border-b">

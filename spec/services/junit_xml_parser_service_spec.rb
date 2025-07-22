@@ -22,7 +22,7 @@ RSpec.describe JunitXmlParserService do
       test_suites = parser.parse
 
       expect(test_suites.length).to eq(1)
-      
+
       test_suite = test_suites.first
       expect(test_suite.name).to eq('com.example.TestSuite')
       expect(test_suite.total_tests).to eq(3)
@@ -39,7 +39,7 @@ RSpec.describe JunitXmlParserService do
       test_suite = test_suites.first
 
       expect(test_suite.test_cases.count).to eq(3)
-      
+
       passed_test = test_suite.test_cases.find_by(name: 'testSuccess')
       expect(passed_test.status).to eq('passed')
       expect(passed_test.duration).to eq(5.0)

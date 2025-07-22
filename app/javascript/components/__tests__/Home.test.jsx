@@ -10,12 +10,19 @@ jest.mock('../tests/TestDashboard', () => {
   };
 });
 
+// Mock the Navigation component
+jest.mock('../NavigationSimple', () => {
+  return function MockNavigation() {
+    return <nav data-testid="navigation">Navigation</nav>;
+  };
+});
+
 describe('Home', () => {
   test('renders the header and navigation correctly', () => {
     render(<Home />);
     
     expect(screen.getByText('Test App')).toBeInTheDocument();
-    expect(screen.getByText('Test application for using React on Rails with automated testing capabilities.')).toBeInTheDocument();
+    expect(screen.getByText('Test application for using React on Rails with automated testing capabilities and secure authentication.')).toBeInTheDocument();
     expect(screen.getByText('Link Test (Rails Route)')).toBeInTheDocument();
     expect(screen.getByText('Flowbite Button')).toBeInTheDocument();
   });

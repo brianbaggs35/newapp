@@ -1,7 +1,7 @@
 class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :confirm]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy, :confirm ]
 
   def index
     @users = User.all.order(:email)
@@ -15,7 +15,7 @@ class Admin::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.skip_confirmation! if params[:user][:skip_confirmation]
-    
+
     if @user.save
       render json: @user, status: :created
     else

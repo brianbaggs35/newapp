@@ -1,6 +1,6 @@
 class TestsController < ApplicationController
-  before_action :set_test_suite, only: [:show, :destroy]
-  
+  before_action :set_test_suite, only: [ :show, :destroy ]
+
   def index
     @test_suites = TestSuite.includes(:test_cases).order(created_at: :desc)
     render json: @test_suites.map { |suite| test_suite_json(suite) }
@@ -16,7 +16,7 @@ class TestsController < ApplicationController
 
   def import
     unless params[:xml_file]
-      render json: { error: 'No XML file provided' }, status: :bad_request
+      render json: { error: "No XML file provided" }, status: :bad_request
       return
     end
 
@@ -24,7 +24,7 @@ class TestsController < ApplicationController
       xml_content = params[:xml_file].read
       parser = JunitXmlParserService.new(xml_content)
       test_suites = parser.parse
-      
+
       render json: {
         message: "Successfully imported #{test_suites.length} test suite(s)",
         test_suites: test_suites.map { |suite| test_suite_json(suite) }
@@ -45,7 +45,7 @@ class TestsController < ApplicationController
     passed_tests = TestCase.passed.count
     failed_tests = TestCase.failed.count
     skipped_tests = TestCase.skipped.count
-    
+
     render json: {
       total_suites: total_suites,
       total_tests: total_tests,

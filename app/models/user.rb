@@ -8,6 +8,6 @@ class User < ApplicationRecord
   validates :role, inclusion: { in: %w[user admin] }
 
   def admin?
-    role == 'admin'
+    role == "admin"
   end
 end

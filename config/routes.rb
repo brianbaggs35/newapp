@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users
   root "homepage#index"
-  
+
   # Dashboard and user management routes
-  get '/dashboard', to: 'dashboard#index'
-  get '/dashboard/stats', to: 'dashboard#stats'
-  
+  get "/dashboard", to: "dashboard#index"
+  get "/dashboard/stats", to: "dashboard#stats"
+
   # User management routes (admin only)
   namespace :admin do
     resources :users do
@@ -14,17 +14,17 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
   get "newlink", to: "homepage#index"
-  
+
   # Test management routes
-  resources :tests, only: [:index, :show, :destroy] do
+  resources :tests, only: [ :index, :show, :destroy ] do
     collection do
       post :import
       get :statistics
     end
   end
-  
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
