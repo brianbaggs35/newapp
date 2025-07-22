@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
+  devise_for :users
   root "homepage#index"
+  
+  # Dashboard and user management routes
+  get '/dashboard', to: 'dashboard#index'
+  get '/dashboard/stats', to: 'dashboard#stats'
+  
+  # User management routes (admin only)
+  namespace :admin do
+    resources :users do
+      member do
+        patch :confirm
+      end
+    end
+  end
+  
   get "newlink", to: "homepage#index"
   
   # Test management routes

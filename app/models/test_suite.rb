@@ -3,7 +3,7 @@ class TestSuite < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
   
-  enum status: { pending: 0, running: 1, completed: 2, failed: 3 }
+  enum :status, { pending: 0, running: 1, completed: 2, failed: 3 }
   
   def success_rate
     return 0 if total_tests == 0
