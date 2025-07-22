@@ -3,7 +3,7 @@ class TestCase < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
   
-  enum status: { pending: 0, passed: 1, failed: 2, skipped: 3, error: 4 }
+  enum :status, { pending: 0, passed: 1, failed: 2, skipped: 3, error: 4 }
   
   scope :by_status, ->(status) { where(status: status) }
   scope :recent, -> { order(executed_at: :desc) }
