@@ -48,7 +48,12 @@ class Admin::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :role)
+    permitted_params = [:email]
+    
+    # Only allow role changes by admin users
+    permitted_params << :role if current_user&.admin?
+    
+    params.require(:user).permit(permitted_params)
   end
 
   def ensure_admin!
