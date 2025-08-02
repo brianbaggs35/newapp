@@ -28,7 +28,11 @@ A Ruby on Rails 8.0 application with full React 19.1.0 integration for modern fr
 
 2. **Build assets:**
    ```bash
+   # Production build (optimized, ~657KB)
    yarn build && yarn build:css
+   
+   # Development build (with source maps, ~1.9MB)
+   yarn build:dev && yarn build:css
    ```
 
 3. **Database setup:**
@@ -120,6 +124,14 @@ bin/rails test          # Minitest (if used)
 ### Integration Test
 ```bash
 node test-react-integration.js
+```
+
+### Verify React Integration
+```bash
+# Quick verification that React is working
+yarn build && yarn build:css  # Build assets
+yarn test                     # Run all tests (52 tests should pass)
+node test-react-integration.js # Verify integration
 ```
 
 ## Development Workflow
