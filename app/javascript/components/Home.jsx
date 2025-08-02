@@ -48,8 +48,14 @@ const Home = () => {
             <Button className="bg-gray-600 hover:bg-gray-700" color="light">
               Flowbite Button
             </Button>
+            <Button className="bg-purple-600 hover:bg-purple-700" color="light" href="#about">
+              About (React Page)
+            </Button>
+            <Button className="bg-green-600 hover:bg-green-700" color="light" href="#contact">
+              Contact (React Page)
+            </Button>
             {currentUser && (
-              <Button className="bg-green-600 hover:bg-green-700" color="light" href="/dashboard">
+              <Button className="bg-indigo-600 hover:bg-indigo-700" color="light" href="/dashboard">
                 Dashboard
               </Button>
             )}
