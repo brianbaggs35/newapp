@@ -4,7 +4,7 @@ import TestDashboard from "./tests/TestDashboard";
 import ReactDemo from "./ReactDemo";
 import NavigationSimple from "./NavigationSimple";
 
-export default () => {
+const Home = () => {
   const currentUser = window.currentUser || null;
 
   const handleLogout = async () => {
@@ -20,6 +20,7 @@ export default () => {
         window.location.href = '/';
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Logout failed:', error);
     }
   };
@@ -66,3 +67,7 @@ export default () => {
     </div>
   );
 };
+
+Home.displayName = 'Home';
+
+export default Home;

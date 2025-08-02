@@ -28,6 +28,7 @@ const TestDashboard = () => {
         setStatistics(statsData);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to fetch test data:', error);
     }
   };
@@ -38,7 +39,7 @@ const TestDashboard = () => {
     setRefreshing(false);
   };
 
-  const handleImportSuccess = (newTestSuites) => {
+  const handleImportSuccess = (_newTestSuites) => {
     // Refresh data after successful import
     handleRefresh();
   };
