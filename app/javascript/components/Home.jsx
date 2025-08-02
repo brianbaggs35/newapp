@@ -54,6 +54,9 @@ const Home = () => {
             <Button className="bg-green-600 hover:bg-green-700" color="light" href="#contact">
               Contact (React Page)
             </Button>
+            <Button className="bg-orange-600 hover:bg-orange-700" color="light" href="#services">
+              Services (React Page)
+            </Button>
             {currentUser && (
               <Button className="bg-indigo-600 hover:bg-indigo-700" color="light" href="/dashboard">
                 Dashboard

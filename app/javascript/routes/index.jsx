@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Home from "../components/Home";
 import About from "../components/About";
 import ContactForm from "../components/ContactForm";
+import Services from "../components/Services";
 
 const Router = () => {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -27,6 +28,8 @@ const Router = () => {
         return <About />;
       case 'contact':
         return <ContactForm />;
+      case 'services':
+        return <Services />;
       default:
         return <Home />;
     }

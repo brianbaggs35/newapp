@@ -21,7 +21,7 @@ const ContactForm = () => {
     e.preventDefault();
     // Simulate form submission
     setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    window.setTimeout(() => setSubmitted(false), 3000);
     setFormData({ name: '', email: '', message: '' });
   };
 
