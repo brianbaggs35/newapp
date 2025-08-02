@@ -2,8 +2,11 @@
 
 if gem list --no-installed --exact --silent foreman; then
   echo "Installing foreman..."
-  gem install foreman
+  gem install foreman --user-install
 fi
+
+# Add user gem bin directory to PATH
+export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
