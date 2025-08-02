@@ -42,7 +42,7 @@ const LoginForm = () => {
         const data = await response.json();
         setError(data.error || 'Login failed. Please check your credentials.');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -127,7 +127,7 @@ const LoginForm = () => {
 
           <div className="text-center">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <a
                 href="/users/sign_up"
                 className="text-blue-600 hover:underline dark:text-blue-500"

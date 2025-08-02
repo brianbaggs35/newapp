@@ -34,6 +34,7 @@ const TestSuitesList = ({ testSuites, onDelete, onRefresh }) => {
       setSelectedSuite(data);
       setShowDetailsModal(true);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to fetch test details:', error);
     }
   };
@@ -55,12 +56,13 @@ const TestSuitesList = ({ testSuites, onDelete, onRefresh }) => {
       });
 
       if (response.ok) {
-        onDelete && onDelete(suiteToDelete.id);
+        onDelete?.(suiteToDelete.id);
         setShowDeleteModal(false);
         setSuiteToDelete(null);
-        onRefresh && onRefresh();
+        onRefresh?.();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to delete test suite:', error);
     }
   };
@@ -181,7 +183,7 @@ const TestSuitesList = ({ testSuites, onDelete, onRefresh }) => {
           Confirm Delete
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete the test suite "{suiteToDelete?.name}"? This action cannot be undone.</p>
+          <p>Are you sure you want to delete the test suite &quot;{suiteToDelete?.name}&quot;? This action cannot be undone.</p>
         </Modal.Body>
         <Modal.Footer>
           <Button color="failure" onClick={handleDeleteConfirm}>
