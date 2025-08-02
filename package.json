@@ -16,6 +16,7 @@
     "@typescript-eslint/parser": "^8.38.0",
     "babel-jest": "^29.7.0",
     "esbuild": "^0.25.7",
+    "esbuild-bundle-analyzer": "^0.0.1",
     "eslint": "^9.32.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -24,7 +25,8 @@
     "typescript": "^5.9.2"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --minify --tree-shaking=true",
+    "build:dev": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify",
     "postinstall": "flowbite-react patch && flowbite-react register",
     "test": "jest",

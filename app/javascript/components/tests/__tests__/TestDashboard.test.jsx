@@ -18,13 +18,13 @@ jest.mock('../TestImport', () => {
 });
 
 jest.mock('../TestStatistics', () => {
-  return function MockTestStatistics({ statistics }) {
+  return function MockTestStatistics({ statistics: _statistics }) {
     return <div data-testid="test-statistics">Statistics Component</div>;
   };
 });
 
 jest.mock('../TestSuitesList', () => {
-  return function MockTestSuitesList({ testSuites, onDelete, onRefresh }) {
+  return function MockTestSuitesList({ testSuites: _testSuites, onDelete, onRefresh }) {
     return (
       <div data-testid="test-suites-list">
         <h3>Test Suites</h3>

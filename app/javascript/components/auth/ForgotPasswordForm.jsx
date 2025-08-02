@@ -43,7 +43,7 @@ const ForgotPasswordForm = () => {
         const data = await response.json();
         setError(data.error || 'Failed to send reset instructions. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -59,7 +59,7 @@ const ForgotPasswordForm = () => {
               Forgot Password?
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we&apos;ll send you a link to reset your password.
             </p>
           </div>
 

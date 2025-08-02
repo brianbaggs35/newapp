@@ -23,6 +23,7 @@ const Dashboard = ({ currentUser }) => {
         setStats(data);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to fetch stats:', error);
     } finally {
       setLoading(false);
@@ -46,6 +47,7 @@ const Dashboard = ({ currentUser }) => {
         alert('Confirmation email sent!');
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to resend confirmation:', error);
     }
   };

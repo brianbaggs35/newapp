@@ -29,6 +29,7 @@ const UserManagement = () => {
         setUsers(data);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to fetch users:', error);
     } finally {
       setLoading(false);
@@ -74,6 +75,7 @@ const UserManagement = () => {
         fetchUsers();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save user:', error);
     }
   };
@@ -92,7 +94,8 @@ const UserManagement = () => {
           fetchUsers();
         }
       } catch (error) {
-        console.error('Failed to delete user:', error);
+        // eslint-disable-next-line no-console
+      console.error('Failed to delete user:', error);
       }
     }
   };
@@ -110,6 +113,7 @@ const UserManagement = () => {
         fetchUsers();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to confirm user:', error);
     }
   };
