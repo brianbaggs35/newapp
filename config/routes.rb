@@ -6,6 +6,15 @@ Rails.application.routes.draw do
   get "/dashboard", to: "dashboard#index"
   get "/dashboard/stats", to: "dashboard#stats"
 
+  # Organization management
+  resources :organizations do
+    resources :users, only: [:index, :show, :edit, :update, :destroy], controller: 'organization_users' do
+      member do
+        patch :change_role
+      end
+    end
+  end
+
   # User management routes (admin only)
   namespace :admin do
     resources :users do
@@ -13,6 +22,7 @@ Rails.application.routes.draw do
         patch :confirm
       end
     end
+    resources :organizations
   end
 
   get "newlink", to: "homepage#index"
