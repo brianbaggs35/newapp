@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import RichTextEditor from '../RichTextEditor';
@@ -18,6 +18,27 @@ Object.defineProperty(window, 'getSelection', {
     })
   }))
 });
+
+// Mock Flowbite components
+jest.mock('flowbite-react', () => ({
+  Button: ({ children, onClick, ...props }) => (
+    <button onClick={onClick} {...props}>{children}</button>
+  ),
+  Tooltip: ({ children, content }) => (
+    <div title={content}>{children}</div>
+  )
+}));
+
+// Mock HiIcons
+jest.mock('react-icons/hi2', () => ({
+  HiBold: () => <span>Bold</span>,
+  HiOutlineItalic: () => <span>Italic</span>,
+  HiOutlineCode: () => <span>Code</span>,
+  HiOutlineLink: () => <span>Link</span>,
+  HiOutlineListBullet: () => <span>BulletList</span>,
+  HiOutlineDocumentText: () => <span>DocumentText</span>,
+  HiOutlineEye: () => <span>Eye</span>
+}));
 
 describe('RichTextEditor', () => {
   const defaultProps = {

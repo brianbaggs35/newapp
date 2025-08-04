@@ -7,6 +7,87 @@ import ManualTestCaseManager from '../ManualTestCaseManager';
 // Mock fetch
 global.fetch = jest.fn();
 
+// Mock Flowbite components
+jest.mock('flowbite-react', () => ({
+  Button: ({ children, onClick, color, size, ...props }) => (
+    <button onClick={onClick} className={`btn-${color} btn-${size}`} {...props}>
+      {children}
+    </button>
+  ),
+  Modal: ({ show, onClose, size, children }) => show ? (
+    <div data-testid="modal" className={`modal-${size}`}>
+      <button onClick={onClose}>×</button>
+      {children}
+    </div>
+  ) : null,
+  'Modal.Header': ({ children }) => <div className="modal-header">{children}</div>,
+  'Modal.Body': ({ children }) => <div className="modal-body">{children}</div>,
+  'Modal.Footer': ({ children }) => <div className="modal-footer">{children}</div>,
+  Card: ({ children, className }) => <div className={`card ${className}`}>{children}</div>,
+  Table: ({ children, hoverable }) => <table className={`table ${hoverable ? 'hoverable' : ''}`}>{children}</table>,
+  'Table.Head': ({ children }) => <thead>{children}</thead>,
+  'Table.HeadCell': ({ children }) => <th>{children}</th>,
+  'Table.Body': ({ children, className }) => <tbody className={className}>{children}</tbody>,
+  'Table.Row': ({ children, className }) => <tr className={className}>{children}</tr>,
+  'Table.Cell': ({ children, className }) => <td className={className}>{children}</td>,
+  Badge: ({ children, color, size }) => <span className={`badge badge-${color} badge-${size}`}>{children}</span>,
+  TextInput: ({ value, onChange, placeholder, type, ...props }) => (
+    <input 
+      type={type || 'text'} 
+      value={value} 
+      onChange={onChange} 
+      placeholder={placeholder} 
+      {...props} 
+    />
+  ),
+  Textarea: ({ value, onChange, placeholder, rows, ...props }) => (
+    <textarea 
+      value={value} 
+      onChange={onChange} 
+      placeholder={placeholder} 
+      rows={rows}
+      {...props} 
+    />
+  ),
+  Select: ({ value, onChange, children, ...props }) => (
+    <select value={value} onChange={onChange} {...props}>
+      {children}
+    </select>
+  ),
+  Alert: ({ color, children, onDismiss, className }) => (
+    <div className={`alert alert-${color} ${className}`}>
+      {children}
+      {onDismiss && <button onClick={onDismiss}>×</button>}
+    </div>
+  ),
+  Spinner: ({ size }) => <div className={`spinner spinner-${size}`}>Loading...</div>,
+  Dropdown: ({ label, dismissOnClick, renderTrigger, children }) => (
+    <div className="dropdown">
+      {renderTrigger ? renderTrigger() : <button>{label}</button>}
+      <div className="dropdown-menu">{children}</div>
+    </div>
+  ),
+  'Dropdown.Item': ({ children, icon: Icon, onClick, className }) => (
+    <div className={`dropdown-item ${className}`} onClick={onClick}>
+      {Icon && <Icon />}
+      {children}
+    </div>
+  ),
+  'Dropdown.Divider': () => <hr className="dropdown-divider" />
+}));
+
+// Mock react-icons
+jest.mock('react-icons/hi', () => ({
+  HiPlus: () => <span>+</span>,
+  HiPencil: () => <span>Edit</span>,
+  HiTrash: () => <span>Delete</span>,
+  HiEye: () => <span>View</span>,
+  HiClipboardCheck: () => <span>Execute</span>,
+  HiSearch: () => <span>Search</span>,
+  HiFilter: () => <span>Filter</span>,
+  HiDotsVertical: () => <span>...</span>
+}));
+
 // Mock RichTextEditor component
 jest.mock('../RichTextEditor', () => {
   return function MockRichTextEditor({ content, onChange, readOnly, placeholder }) {

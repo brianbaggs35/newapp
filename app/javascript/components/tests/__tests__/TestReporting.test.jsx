@@ -32,6 +32,55 @@ jest.mock('chart.js', () => ({
   ArcElement: {}
 }));
 
+// Mock Flowbite components
+jest.mock('flowbite-react', () => ({
+  Card: ({ children, className }) => <div className={`card ${className}`}>{children}</div>,
+  Button: ({ children, onClick, color, size, ...props }) => (
+    <button onClick={onClick} className={`btn-${color} btn-${size}`} {...props}>
+      {children}
+    </button>
+  ),
+  Select: ({ value, onChange, children, ...props }) => (
+    <select value={value} onChange={onChange} {...props}>
+      {children}
+    </select>
+  ),
+  Badge: ({ children, color, size }) => <span className={`badge badge-${color} badge-${size}`}>{children}</span>,
+  Table: ({ children, hoverable }) => <table className={`table ${hoverable ? 'hoverable' : ''}`}>{children}</table>,
+  'Table.Head': ({ children }) => <thead>{children}</thead>,
+  'Table.HeadCell': ({ children }) => <th>{children}</th>,
+  'Table.Body': ({ children, className }) => <tbody className={className}>{children}</tbody>,
+  'Table.Row': ({ children, className }) => <tr className={className}>{children}</tr>,
+  'Table.Cell': ({ children, className }) => <td className={className}>{children}</td>,
+  Alert: ({ color, children, onDismiss, className }) => (
+    <div className={`alert alert-${color} ${className}`}>
+      {children}
+      {onDismiss && <button onClick={onDismiss}>×</button>}
+    </div>
+  ),
+  Spinner: ({ size }) => <div className={`spinner spinner-${size}`}>Loading...</div>,
+  Progress: ({ progress, color, size, className, ...props }) => (
+    <div className={`progress progress-${color} progress-${size} ${className}`} {...props}>
+      <div className="progress-bar" style={{ width: `${progress}%` }} role="progressbar" />
+    </div>
+  )
+}));
+
+// Mock react-icons
+jest.mock('react-icons/hi', () => ({
+  HiDownload: () => <span>Download</span>,
+  HiPrinter: () => <span>Print</span>,
+  HiChartBar: () => <span>Chart</span>,
+  HiDocumentReport: () => <span>Report</span>,
+  HiCalendar: () => <span>Calendar</span>,
+  HiTrendingUp: () => <span>TrendingUp</span>,
+  HiTrendingDown: () => <span>TrendingDown</span>,
+  HiClock: () => <span>Clock</span>,
+  HiCheckCircle: () => <span>CheckCircle</span>,
+  HiXCircle: () => <span>XCircle</span>,
+  HiExclamation: () => <span>Exclamation</span>
+}));
+
 // Mock fetch
 global.fetch = jest.fn();
 

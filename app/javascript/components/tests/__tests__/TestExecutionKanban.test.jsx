@@ -25,6 +25,68 @@ jest.mock('react-beautiful-dnd', () => ({
     }, { isDragging: false })
 }));
 
+// Mock Flowbite components
+jest.mock('flowbite-react', () => ({
+  Card: ({ children, className }) => <div className={`card ${className}`}>{children}</div>,
+  Badge: ({ children, color, size }) => <span className={`badge badge-${color} badge-${size}`}>{children}</span>,
+  Button: ({ children, onClick, color, size, disabled, pill, className, ...props }) => (
+    <button 
+      onClick={onClick} 
+      disabled={disabled}
+      className={`btn-${color} btn-${size} ${pill ? 'pill' : ''} ${className}`} 
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  Modal: ({ show, onClose, size, children }) => show ? (
+    <div data-testid="modal" className={`modal-${size}`}>
+      <button onClick={onClose}>×</button>
+      {children}
+    </div>
+  ) : null,
+  'Modal.Header': ({ children }) => <div className="modal-header">{children}</div>,
+  'Modal.Body': ({ children }) => <div className="modal-body">{children}</div>,
+  'Modal.Footer': ({ children }) => <div className="modal-footer">{children}</div>,
+  Textarea: ({ value, onChange, placeholder, rows, ...props }) => (
+    <textarea 
+      value={value} 
+      onChange={onChange} 
+      placeholder={placeholder} 
+      rows={rows}
+      {...props} 
+    />
+  ),
+  Select: ({ value, onChange, children, ...props }) => (
+    <select value={value} onChange={onChange} {...props}>
+      {children}
+    </select>
+  ),
+  Alert: ({ color, children, onDismiss, className }) => (
+    <div className={`alert alert-${color} ${className}`}>
+      {children}
+      {onDismiss && <button onClick={onDismiss}>×</button>}
+    </div>
+  ),
+  Spinner: ({ size, light, className }) => <div className={`spinner spinner-${size} ${className}`}>Loading...</div>,
+  Avatar: ({ img, size, rounded }) => <img src={img} className={`avatar-${size} ${rounded ? 'rounded' : ''}`} alt="avatar" />,
+  Tooltip: ({ children, content }) => <div title={content}>{children}</div>
+}));
+
+// Mock react-icons
+jest.mock('react-icons/hi', () => ({
+  HiPlay: () => <span>Play</span>,
+  HiPause: () => <span>Pause</span>,
+  HiCheck: () => <span>Check</span>,
+  HiX: () => <span>X</span>,
+  HiClock: () => <span>Clock</span>,
+  HiUser: () => <span>User</span>,
+  HiExclamation: () => <span>!</span>,
+  HiRefresh: () => <span>Refresh</span>,
+  HiFilter: () => <span>Filter</span>,
+  HiPlus: () => <span>Plus</span>
+}));
+
 // Mock fetch
 global.fetch = jest.fn();
 
