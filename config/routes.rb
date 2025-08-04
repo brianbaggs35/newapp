@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: 'users/registrations'
+  }, path_names: {
+    sign_up: 'register'
   }
   root "homepage#index"
 

@@ -1,2 +1,18 @@
-<h1>Organizations#index</h1>
-<p>Find me in app/views/organizations/index.html.erb</p>
+<div id="organization-selector" 
+     data-current-user="<%= current_user.to_json(only: [:id, :email, :role]) %>">
+</div>
+
+<script type="module">
+  import { createRoot } from 'react-dom/client';
+  import React from 'react';
+  import OrganizationSelector from '../javascript/components/organizations/OrganizationSelector.jsx';
+
+  const container = document.getElementById('organization-selector');
+  const root = createRoot(container);
+  
+  const currentUser = JSON.parse(container.dataset.currentUser);
+  
+  root.render(React.createElement(OrganizationSelector, {
+    currentUser: currentUser
+  }));
+</script>
