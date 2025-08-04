@@ -9,8 +9,26 @@ class OrganizationsController < ApplicationController
       @organizations = Organization.all.order(:name)
     elsif current_user.organization.present?
       redirect_to organization_path(current_user.organization)
+      return
     else
       redirect_to new_organization_path
+      return
+    end
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: @organizations.map { |org|
+          {
+            id: org.id,
+            name: org.name,
+            description: org.description,
+            active: org.active,
+            user_count: org.users.count,
+            test_suite_count: org.test_suites.count
+          }
+        }
+      end
     end
   end
 
