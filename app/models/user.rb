@@ -5,6 +5,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
 
   belongs_to :organization, optional: true
+  has_many :created_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'created_by_id'
+  has_many :updated_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'updated_by_id'
+  has_many :test_executions, foreign_key: 'executed_by_id'
+  has_many :created_test_execution_cycles, class_name: 'TestExecutionCycle', foreign_key: 'created_by_id'
 
   validates :email, presence: true, uniqueness: true
   validates :role, inclusion: { in: %w[system_admin test_owner test_manager test_runner] }
