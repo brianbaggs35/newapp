@@ -1,8 +1,9 @@
 require "nokogiri"
 
 class JunitXmlParserService
-  def initialize(xml_content)
+  def initialize(xml_content, organization)
     @xml_content = xml_content
+    @organization = organization
     @doc = Nokogiri::XML(xml_content)
   end
 
@@ -27,6 +28,7 @@ class JunitXmlParserService
     description = "Test suite with #{suite_node['tests']} tests"
 
     test_suite = TestSuite.create!(
+      organization: @organization,
       name: name,
       description: description,
       project: extract_project_name(name),

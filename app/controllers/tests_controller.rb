@@ -1,8 +1,10 @@
 class TestsController < ApplicationController
+  before_action :ensure_organization_member!
+  before_action :set_organization
   before_action :set_test_suite, only: [ :show, :destroy ]
 
   def index
-    @test_suites = TestSuite.includes(:test_cases).order(created_at: :desc)
+    @test_suites = @organization.test_suites.includes(:test_cases).order(created_at: :desc)
     render json: @test_suites.map { |suite| test_suite_json(suite) }
   end
 
@@ -22,7 +24,7 @@ class TestsController < ApplicationController
 
     begin
       xml_content = params[:xml_file].read
-      parser = JunitXmlParserService.new(xml_content)
+      parser = JunitXmlParserService.new(xml_content, @organization)
       test_suites = parser.parse
 
       render json: {
@@ -35,16 +37,21 @@ class TestsController < ApplicationController
   end
 
   def destroy
+    unless current_user.can_manage_organization?
+      render json: { error: 'Access denied' }, status: :forbidden
+      return
+    end
+
     @test_suite.destroy
     head :no_content
   end
 
   def statistics
-    total_suites = TestSuite.count
-    total_tests = TestCase.count
-    passed_tests = TestCase.passed.count
-    failed_tests = TestCase.failed.count
-    skipped_tests = TestCase.skipped.count
+    total_suites = @organization.test_suites.count
+    total_tests = @organization.test_cases.count
+    passed_tests = @organization.test_cases.passed.count
+    failed_tests = @organization.test_cases.failed.count
+    skipped_tests = @organization.test_cases.skipped.count
 
     render json: {
       total_suites: total_suites,
@@ -53,14 +60,18 @@ class TestsController < ApplicationController
       failed_tests: failed_tests,
       skipped_tests: skipped_tests,
       success_rate: total_tests > 0 ? (passed_tests.to_f / total_tests * 100).round(2) : 0,
-      recent_suites: TestSuite.order(created_at: :desc).limit(5).map { |suite| test_suite_json(suite) }
+      recent_suites: @organization.test_suites.order(created_at: :desc).limit(5).map { |suite| test_suite_json(suite) }
     }
   end
 
   private
 
+  def set_organization
+    @organization = current_user.organization
+  end
+
   def set_test_suite
-    @test_suite = TestSuite.find(params[:id])
+    @test_suite = @organization.test_suites.find(params[:id])
   end
 
   def test_suite_json(suite)

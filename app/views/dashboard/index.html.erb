@@ -1,15 +1,23 @@
 <% content_for :title, "Dashboard" %>
 
-<div id="dashboard-root"></div>
+<div id="dashboard-root" 
+     data-current-user="<%= current_user.to_json(only: [:id, :email, :role]) %>"
+     data-current-organization="<%= current_user.organization.to_json(only: [:id, :name, :description, :active]) if current_user.organization %>">
+</div>
 
 <script type="module">
   import React from 'react';
   import { createRoot } from 'react-dom/client';
-  import Dashboard from '../javascript/components/Dashboard.jsx';
-  
-  const currentUser = <%= raw current_user.to_json %>;
+  import MultiTenantDashboard from '../javascript/components/MultiTenantDashboard.jsx';
   
   const container = document.getElementById('dashboard-root');
   const root = createRoot(container);
-  root.render(React.createElement(Dashboard, { currentUser }));
+  
+  const currentUser = JSON.parse(container.dataset.currentUser);
+  const currentOrganization = container.dataset.currentOrganization ? JSON.parse(container.dataset.currentOrganization) : null;
+  
+  root.render(React.createElement(MultiTenantDashboard, {
+    currentUser: currentUser,
+    currentOrganization: currentOrganization
+  }));
 </script>
