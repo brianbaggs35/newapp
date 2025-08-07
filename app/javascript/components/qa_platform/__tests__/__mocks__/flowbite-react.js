@@ -161,6 +161,10 @@ Dropdown.Item = ({ href, onClick, children }) => (
   </div>
 );
 
+Dropdown.Header = ({ children }) => (
+  <div data-testid="dropdown-header">{children}</div>
+);
+
 Dropdown.Divider = () => <div data-testid="dropdown-divider" />;
 
 // Add a test to prevent Jest from treating this as an empty test suite

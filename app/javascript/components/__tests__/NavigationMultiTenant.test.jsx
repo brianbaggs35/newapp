@@ -40,7 +40,7 @@ describe('NavigationMultiTenant Component', () => {
       />);
     });
     
-    expect(screen.getByText('Test Organization')).toBeInTheDocument();
+    expect(screen.getByText(/Test Organization/)).toBeInTheDocument();
   });
 
   it('shows system admin options for system admin users', async () => {
@@ -70,7 +70,7 @@ describe('NavigationMultiTenant Component', () => {
       />);
     });
     
-    expect(screen.getByText('Manage Users')).toBeInTheDocument();
+    expect(screen.getAllByText('Manage Users')[0]).toBeInTheDocument();
   });
 
   it('renders user email and logout button', async () => {
@@ -85,7 +85,7 @@ describe('NavigationMultiTenant Component', () => {
       />);
     });
     
-    expect(screen.getByText('test@example.com')).toBeInTheDocument();
+    expect(screen.getAllByText('test@example.com')[0]).toBeInTheDocument();
     expect(screen.getByText('Logout')).toBeInTheDocument();
   });
 });

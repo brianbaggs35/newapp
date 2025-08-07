@@ -11,7 +11,7 @@ import {
   HiChevronDown
 } from 'react-icons/hi';
 
-const Navigation = ({ currentUser, currentOrganization, onLogout }) => {
+const NavigationMultiTenant = ({ currentUser, currentOrganization, onLogout }) => {
   const isSystemAdmin = currentUser?.role === 'system_admin';
   const canManageOrganization = currentUser?.role === 'test_owner' || currentUser?.role === 'test_manager';
   const canManageUsers = canManageOrganization;
@@ -263,4 +263,4 @@ const Navigation = ({ currentUser, currentOrganization, onLogout }) => {
   );
 };
 
-export default Navigation;
+export default NavigationMultiTenant;

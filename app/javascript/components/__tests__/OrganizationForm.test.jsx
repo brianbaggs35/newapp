@@ -77,7 +77,7 @@ describe('OrganizationForm Component', () => {
     
     const inputs = screen.getAllByTestId('text-input');
     const nameInput = inputs.find(input => input.name === 'name');
-    const submitButton = screen.getByText('Create');
+    const submitButton = screen.getByRole('button', { name: 'Create Organization' });
     
     await user.type(nameInput, 'New Organization');
     await user.click(submitButton);
