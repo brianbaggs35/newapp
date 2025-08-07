@@ -40,7 +40,7 @@ describe('NavigationMultiTenant Component', () => {
       />);
     });
     
-    expect(screen.getByText(/Test Organization/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Test Organization/)[0]).toBeInTheDocument();
   });
 
   it('shows system admin options for system admin users', async () => {

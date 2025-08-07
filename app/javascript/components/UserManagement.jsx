@@ -119,7 +119,7 @@ const UserManagement = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading users...</div>;
+    return <div className="text-center py-8" data-testid="spinner">Loading users...</div>;
   }
 
   return (
@@ -198,7 +198,7 @@ const UserManagement = () => {
         </Table>
       </Card>
 
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
+      <Modal show={showModal} onClose={() => setShowModal(false)} data-testid="modal">
         <Modal.Header>
           {editingUser ? 'Edit User' : 'Add New User'}
         </Modal.Header>

@@ -41,7 +41,7 @@ describe('OrganizationForm Component', () => {
     render(<OrganizationForm organization={mockOrganization} onSuccess={mockOnSuccess} onCancel={mockOnCancel} />);
     
     expect(screen.getByText('Edit Organization')).toBeInTheDocument();
-    expect(screen.getByText('Update')).toBeInTheDocument();
+    expect(screen.getByText('Update Organization')).toBeInTheDocument();
   });
 
   it('updates form data when inputs change', async () => {

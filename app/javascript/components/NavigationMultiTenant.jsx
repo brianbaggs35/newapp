@@ -120,7 +120,7 @@ const NavigationMultiTenant = ({ currentUser, currentOrganization, onLogout }) =
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleLogout}>
                 <HiLogout className="mr-2 h-4 w-4" />
-                Sign out
+                Logout
               </Dropdown.Item>
             </Dropdown>
           </>
