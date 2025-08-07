@@ -15,7 +15,11 @@ describe('HelloController', () => {
   beforeEach(() => {
     element = new MockElement();
     controller = new HelloController();
-    controller.element = element;
+    // Mock the element property using Object.defineProperty
+    Object.defineProperty(controller, 'element', {
+      get: () => element,
+      configurable: true
+    });
   });
 
   it('extends Controller', () => {
