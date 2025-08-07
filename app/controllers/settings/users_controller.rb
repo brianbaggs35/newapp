@@ -132,7 +132,7 @@ class Settings::UsersController < SettingsController
   end
 
   def user_params
-    params.require(:user).permit(:email, :role)
+    params.require(:user).permit(:email)
   end
 
   def can_assign_role?(role)
