@@ -39,7 +39,7 @@ RSpec.describe Organization, type: :model do
     it 'returns active organizations' do
       active_org = create(:organization, active: true)
       inactive_org = create(:organization, active: false)
-      
+
       expect(Organization.active).to include(active_org)
       expect(Organization.active).not_to include(inactive_org)
     end

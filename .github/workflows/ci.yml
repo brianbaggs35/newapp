@@ -69,13 +69,6 @@ jobs:
           RAILS_ENV: test
         run: bundle exec rspec --format RspecJunitFormatter --out tmp/rspec_results.xml
 
-      - name: Upload RSpec results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: rspec-results
-          path: tmp/rspec_results.xml
-
   scan_ruby:
     runs-on: ubuntu-latest
 

@@ -161,4 +161,37 @@ describe('UserManagement Component', () => {
     expect(screen.getByText('Joined')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
   });
+
+  it('handles empty users list', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve([])
+    });
+
+    await act(async () => {
+      render(<UserManagement />);
+    });
+    
+    await waitFor(() => {
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+
+    // Should show table headers even when no users
+    expect(screen.getByText('User')).toBeInTheDocument();
+  });
+
+  it('handles fetch error gracefully', async () => {
+    fetch.mockRejectedValueOnce(new Error('Network error'));
+
+    await act(async () => {
+      render(<UserManagement />);
+    });
+    
+    await waitFor(() => {
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+
+    // Should still show the basic structure
+    expect(screen.getByText('User Management')).toBeInTheDocument();
+  });
 });
