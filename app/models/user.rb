@@ -11,42 +11,45 @@ class User < ApplicationRecord
   has_many :created_test_execution_cycles, class_name: 'TestExecutionCycle', foreign_key: 'created_by_id'
 
   validates :email, presence: true, uniqueness: true
-  validates :role, inclusion: { in: %w[system_admin test_owner test_manager test_runner] }
+  validates :role, inclusion: { in: %w[system_admin owner admin member] }
   validate :organization_required_for_non_system_admin
   validate :only_one_owner_per_organization
 
-  # Role helper methods
+  # Role helper methods based on requirements
   def system_admin?
     role == 'system_admin'
   end
 
-  def test_owner?
-    role == 'test_owner'
-  end
-
-  def test_manager?
-    role == 'test_manager'
-  end
-
-  def test_runner?
-    role == 'test_runner'
+  def owner?
+    role == 'owner'
   end
 
   def admin?
-    # Backwards compatibility - system admins are admins
-    system_admin?
+    role == 'admin'
+  end
+
+  def member?
+    role == 'member'
   end
 
   def can_manage_organization?
-    test_owner? || test_manager?
+    owner? || admin?
   end
 
-  def can_manage_users?
-    test_owner? || test_manager?
+  def can_invite_owners?
+    owner?
+  end
+
+  def can_invite_users?
+    owner? || admin?
   end
 
   def can_manage_all_organizations?
     system_admin?
+  end
+
+  def can_see_organization_management?
+    owner? || admin?
   end
 
   private
@@ -58,8 +61,8 @@ class User < ApplicationRecord
   end
 
   def only_one_owner_per_organization
-    if test_owner? && organization.present?
-      existing_owner = organization.users.where(role: 'test_owner').where.not(id: id).first
+    if owner? && organization.present?
+      existing_owner = organization.users.where(role: 'owner').where.not(id: id).first
       if existing_owner.present?
         errors.add(:role, 'organization can only have one owner')
       end

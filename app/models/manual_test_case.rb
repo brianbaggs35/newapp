@@ -1,5 +1,6 @@
 class ManualTestCase < ApplicationRecord
   belongs_to :organization
+  belongs_to :test_suite, optional: true
   belongs_to :created_by, class_name: 'User'
   belongs_to :updated_by, class_name: 'User', optional: true
   has_many :test_executions, dependent: :destroy
@@ -11,6 +12,10 @@ class ManualTestCase < ApplicationRecord
   validates :priority, inclusion: { in: %w[critical high medium low] }
   validates :status, inclusion: { in: %w[draft review approved deprecated] }
   validates :estimated_time, numericality: { greater_than: 0 }, allow_nil: true
+  # Additional validations for QA platform requirements
+  validates :module_name, length: { maximum: 100 }
+  validates :environment, length: { maximum: 100 }
+  validates :account, length: { maximum: 100 }
 
   enum :priority, { critical: 'critical', high: 'high', medium: 'medium', low: 'low' }
   enum :status, { draft: 'draft', review: 'review', approved: 'approved', deprecated: 'deprecated' }
@@ -20,6 +25,8 @@ class ManualTestCase < ApplicationRecord
   scope :by_category, ->(category) { where(category: category) }
   scope :recent, -> { order(created_at: :desc) }
   scope :for_organization, ->(org) { where(organization: org) }
+  scope :in_test_suite, ->(suite_id) { where(test_suite_id: suite_id) }
+  scope :orphaned, -> { where(test_suite_id: nil) }
 
   def tags_array
     return [] if tags.blank?
