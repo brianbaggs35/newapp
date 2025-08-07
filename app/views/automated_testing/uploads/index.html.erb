@@ -1,0 +1,88 @@
+<% content_for :title, "Test Upload - QA Platform" %>
+
+<div id="automated-test-upload"></div>
+
+<script type="module">
+  import AutomatedTestUpload from '../../../javascript/components/qa_platform/AutomatedTestUpload';
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+
+  const testRuns = <%= raw @test_runs.to_json(
+    include: { created_by: { only: [:email] } },
+    methods: [:duration_formatted]
+  ) if @test_runs %>;
+
+  const uploadContainer = document.getElementById('automated-test-upload');
+  if (uploadContainer) {
+    const root = createRoot(uploadContainer);
+    
+    const handleUpload = async (file, name) => {
+      const formData = new FormData();
+      formData.append('test_run[xml_file]', file);
+      if (name) {
+        formData.append('test_run[name]', name);
+      }
+      
+      const response = await fetch('/automated_testing/uploads', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      });
+      
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.errors?.join(', ') || 'Upload failed');
+      }
+      
+      // Reload the page to show new test run
+      window.location.reload();
+    };
+
+    const handleRename = async (uuid, name) => {
+      const response = await fetch(`/automated_testing/uploads/${uuid}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ name })
+      });
+      
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.errors?.join(', ') || 'Rename failed');
+      }
+      
+      window.location.reload();
+    };
+
+    const handleDelete = async (uuid) => {
+      if (!confirm('Are you sure you want to delete this test run?')) {
+        return;
+      }
+      
+      const response = await fetch(`/automated_testing/uploads/${uuid}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      });
+      
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error || 'Delete failed');
+      }
+      
+      window.location.reload();
+    };
+
+    root.render(React.createElement(AutomatedTestUpload, {
+      testRuns: testRuns || [],
+      onUpload: handleUpload,
+      onRename: handleRename,
+      onDelete: handleDelete
+    }));
+  }
+</script>

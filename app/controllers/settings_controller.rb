@@ -1,4 +1,5 @@
 class SettingsController < ApplicationController
+  layout 'qa_platform'
   before_action :authenticate_user!
   
   private

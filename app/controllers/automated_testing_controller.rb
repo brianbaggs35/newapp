@@ -1,4 +1,5 @@
 class AutomatedTestingController < ApplicationController
+  layout 'qa_platform'
   before_action :authenticate_user!
   before_action :ensure_organization
   
