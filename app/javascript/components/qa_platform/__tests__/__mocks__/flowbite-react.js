@@ -23,7 +23,9 @@ Sidebar.Collapse = ({ label, children, open, icon: Icon }) => (
   </div>
 );
 
-export const Card = ({ children }) => <div data-testid="card">{children}</div>;
+export const Card = ({ children, onClick, className }) => (
+  <div data-testid="card" className={className} onClick={onClick}>{children}</div>
+);
 
 export const Button = ({ onClick, children, className, disabled, size, color, href, ...props }) => {
   if (href) {
@@ -46,9 +48,65 @@ export const Badge = ({ color, children }) => (
   <span data-testid="badge" data-color={color}>{children}</span>
 );
 
+export const Alert = ({ color, children, className }) => (
+  <div data-testid="alert" data-color={color} className={className}>{children}</div>
+);
+
+export const Spinner = ({ size, color }) => (
+  <div data-testid="spinner" data-size={size} data-color={color}>Loading...</div>
+);
+
+// Add Navbar components
+export const Navbar = ({ fluid, children }) => (
+  <nav data-testid="navbar" className={fluid ? 'fluid' : ''}>{children}</nav>
+);
+
+Navbar.Brand = ({ href, children }) => (
+  <div data-testid="navbar-brand">
+    <a href={href}>{children}</a>
+  </div>
+);
+
+Navbar.Toggle = () => <button data-testid="navbar-toggle">☰</button>;
+
+Navbar.Collapse = ({ children }) => (
+  <div data-testid="navbar-collapse">{children}</div>
+);
+
+Navbar.Link = ({ href, active, children }) => (
+  <a href={href} data-testid="navbar-link" data-active={active}>{children}</a>
+);
+
+export const Label = ({ htmlFor, children, className }) => (
+  <label htmlFor={htmlFor} className={className} data-testid="label">{children}</label>
+);
+
+export const Textarea = ({ value, onChange, placeholder, rows, className, ...props }) => (
+  <textarea 
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    rows={rows}
+    className={className}
+    data-testid="textarea"
+    {...props}
+  />
+);
+
+export const Checkbox = ({ checked, onChange, className, ...props }) => (
+  <input
+    type="checkbox"
+    checked={checked}
+    onChange={onChange}
+    className={className}
+    data-testid="checkbox"
+    {...props}
+  />
+);
+
 export const Table = ({ children, hoverable }) => <table data-testid="table">{children}</table>;
 
-Table.Head = ({ children }) => <thead data-testid="table-head">{children}</thead>;
+Table.Head = ({ children }) => <thead data-testid="table-head"><tr>{children}</tr></thead>;
 Table.HeadCell = ({ children }) => <th data-testid="table-head-cell">{children}</th>;
 Table.Body = ({ children }) => <tbody data-testid="table-body">{children}</tbody>;
 Table.Row = ({ children, className }) => <tr className={className} data-testid="table-row">{children}</tr>;
@@ -61,9 +119,10 @@ Modal.Header = ({ children }) => <div data-testid="modal-header">{children}</div
 Modal.Body = ({ children }) => <div data-testid="modal-body">{children}</div>;
 Modal.Footer = ({ children }) => <div data-testid="modal-footer">{children}</div>;
 
-export const TextInput = ({ placeholder, value, onChange, ...props }) => (
+export const TextInput = ({ placeholder, value, onChange, id, ...props }) => (
   <input
     type="text"
+    id={id}
     placeholder={placeholder}
     value={value}
     onChange={onChange}
@@ -72,9 +131,10 @@ export const TextInput = ({ placeholder, value, onChange, ...props }) => (
   />
 );
 
-export const FileInput = ({ accept, onChange, ...props }) => (
+export const FileInput = ({ accept, onChange, id, ...props }) => (
   <input
     type="file"
+    id={id}
     accept={accept}
     onChange={onChange}
     data-testid="file-input"
@@ -87,6 +147,21 @@ export const Progress = ({ progress }) => (
     <div style={{ width: `${progress}%` }} />
   </div>
 );
+
+export const Dropdown = ({ label, children, ...props }) => (
+  <div data-testid="dropdown" {...props}>
+    <div data-testid="dropdown-label">{label}</div>
+    <div data-testid="dropdown-menu">{children}</div>
+  </div>
+);
+
+Dropdown.Item = ({ href, onClick, children }) => (
+  <div data-testid="dropdown-item" onClick={onClick}>
+    {href ? <a href={href}>{children}</a> : children}
+  </div>
+);
+
+Dropdown.Divider = () => <div data-testid="dropdown-divider" />;
 
 // Add a test to prevent Jest from treating this as an empty test suite
 describe('Flowbite React Mock', () => {
