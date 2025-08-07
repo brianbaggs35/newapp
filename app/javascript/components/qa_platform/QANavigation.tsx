@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sidebar, Menu } from 'flowbite-react';
+import { Sidebar } from 'flowbite-react';
 import { 
   HiChartPie, 
   HiClipboard, 

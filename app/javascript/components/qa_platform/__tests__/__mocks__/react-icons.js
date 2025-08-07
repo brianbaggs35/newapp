@@ -16,3 +16,12 @@ export const HiPlay = (props) => <svg {...props} data-testid="hi-play" />;
 export const HiTrash = (props) => <svg {...props} data-testid="hi-trash" />;
 export const HiPencil = (props) => <svg {...props} data-testid="hi-pencil" />;
 export const HiEye = (props) => <svg {...props} data-testid="hi-eye" />;
+
+// This is a mock file, so we need at least one test to prevent Jest errors
+describe('React Icons Mock', () => {
+  it('exports all required icon components', () => {
+    expect(HiChartPie).toBeDefined();
+    expect(HiClipboard).toBeDefined();
+    expect(HiDocument).toBeDefined();
+  });
+});

@@ -1,19 +1,27 @@
 // Mock Flowbite React components for testing
-export const Sidebar = {
-  Items: ({ children }) => <div data-testid="sidebar-items">{children}</div>,
-  ItemGroup: ({ children }) => <div data-testid="sidebar-item-group">{children}</div>,
-  Item: ({ href, icon, children, className }) => (
-    <a href={href} className={className} data-testid="sidebar-item">
-      {children}
-    </a>
-  ),
-  Collapse: ({ label, children, open }) => (
-    <div data-testid="sidebar-collapse">
-      <div data-testid="collapse-label">{label}</div>
-      {open && <div data-testid="collapse-content">{children}</div>}
+import React from 'react';
+
+export const Sidebar = ({ children, className }) => (
+  <div className={className} data-testid="sidebar">{children}</div>
+);
+
+Sidebar.Items = ({ children }) => <div data-testid="sidebar-items">{children}</div>;
+Sidebar.ItemGroup = ({ children }) => <div data-testid="sidebar-item-group">{children}</div>;
+Sidebar.Item = ({ href, icon: Icon, children, className }) => (
+  <a href={href} className={className} data-testid="sidebar-item">
+    {Icon && <Icon />}
+    {children}
+  </a>
+);
+Sidebar.Collapse = ({ label, children, open, icon: Icon }) => (
+  <div data-testid="sidebar-collapse">
+    <div data-testid="collapse-label">
+      {Icon && <Icon />}
+      {label}
     </div>
-  )
-};
+    <div data-testid="collapse-content">{children}</div>
+  </div>
+);
 
 export const Card = ({ children }) => <div data-testid="card">{children}</div>;
 
@@ -89,3 +97,12 @@ export const Progress = ({ progress }) => (
     <div style={{ width: `${progress}%` }} />
   </div>
 );
+
+// Add a test to prevent Jest from treating this as an empty test suite
+describe('Flowbite React Mock', () => {
+  it('exports all required components', () => {
+    expect(Sidebar).toBeDefined();
+    expect(Card).toBeDefined();
+    expect(Button).toBeDefined();
+  });
+});

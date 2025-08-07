@@ -5,10 +5,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
 
   belongs_to :organization, optional: true
+  belongs_to :invitation_code, optional: true
   has_many :created_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'created_by_id'
   has_many :updated_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'updated_by_id'
   has_many :test_executions, foreign_key: 'executed_by_id'
   has_many :created_test_execution_cycles, class_name: 'TestExecutionCycle', foreign_key: 'created_by_id'
+  has_many :created_invitation_codes, class_name: 'InvitationCode', foreign_key: 'created_by_id'
 
   validates :email, presence: true, uniqueness: true
   validates :role, inclusion: { in: %w[system_admin owner admin member] }
@@ -50,6 +52,14 @@ class User < ApplicationRecord
 
   def can_see_organization_management?
     owner? || admin?
+  end
+
+  def onboarding_completed?
+    onboarding_completed
+  end
+
+  def full_name
+    [first_name, last_name].compact.join(' ').presence || email
   end
 
   private

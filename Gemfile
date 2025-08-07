@@ -20,7 +20,7 @@ gem "cssbundling-rails"
 gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Devise for authentication
 gem "devise"
@@ -43,7 +43,15 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
+
+# Deployment with Capistrano
+gem "capistrano", "~> 3.18"
+gem "capistrano-rails", "~> 1.6"
+gem "capistrano-bundler", "~> 2.1"
+gem "capistrano3-puma", "~> 6.0"
+gem "capistrano-nvm", require: false
+gem "capistrano-yarn"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -56,12 +64,17 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # RSpec for testing
-  gem "rspec-rails"
-  gem "factory_bot_rails"
+  gem "rspec-rails", "~> 7.0"
+  gem "factory_bot_rails", "~> 6.4"
+  gem "rspec_junit_formatter", "~> 0.6"
 end
 
 group :test do
   gem "simplecov", require: false
+  gem "simplecov-lcov", require: false
+  gem "capybara", "~> 3.40"
+  gem "selenium-webdriver", "~> 4.25"
+  gem "webdrivers", "~> 5.3"
 end
 
 # XML parsing for JUnit files
@@ -79,17 +92,17 @@ gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
 # Background job processing
-gem "sidekiq"
-gem "sidekiq-cron"
+gem "sidekiq", "~> 7.0"
+gem "sidekiq-cron", "~> 2.0"
 
 # Authorization and role management
-gem "cancancan"
+gem "cancancan", "~> 3.6"
 
 # API serialization
-gem "jsonapi-serializer"
+gem "jsonapi-serializer", "~> 2.2"
 
 # Pagination
-gem "kaminari"
+gem "kaminari", "~> 1.2"
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
