@@ -21,8 +21,8 @@ FactoryBot.define do
       after(:create) do |test_run|
         test_cases = create_list(:manual_test_case, 5, organization: test_run.organization)
         test_cases.each do |test_case|
-          create(:manual_test_run_item, 
-                 manual_test_run: test_run, 
+          create(:manual_test_run_item,
+                 manual_test_run: test_run,
                  manual_test_case: test_case,
                  organization: test_run.organization)
         end

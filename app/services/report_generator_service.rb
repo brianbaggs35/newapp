@@ -1,6 +1,6 @@
 class ReportGeneratorService
   include ActionView::Helpers::NumberHelper
-  
+
   attr_reader :organization, :user
 
   def initialize(organization:, user:)
@@ -10,12 +10,12 @@ class ReportGeneratorService
 
   def generate_test_run_report(test_run, options = {})
     report_data = build_test_run_report_data(test_run, options)
-    generate_pdf_report(report_data, 'test_run_report')
+    generate_pdf_report(report_data, "test_run_report")
   end
 
   def generate_manual_test_report(manual_test_run, options = {})
     report_data = build_manual_test_report_data(manual_test_run, options)
-    generate_pdf_report(report_data, 'manual_test_report')
+    generate_pdf_report(report_data, "manual_test_report")
   end
 
   private
@@ -69,10 +69,10 @@ class ReportGeneratorService
 
   def generate_pdf_report(report_data, template_name)
     html_content = render_report_template(template_name, report_data)
-    
+
     pdf = WickedPdf.new.pdf_from_string(
       html_content,
-      page_size: 'A4',
+      page_size: "A4",
       margin: {
         top: 20,
         bottom: 20,
@@ -93,7 +93,7 @@ class ReportGeneratorService
 
   def render_report_template(template_name, data)
     # This would render an ERB template with the report data
-    template = File.read(Rails.root.join('app', 'views', 'reports', "#{template_name}.html.erb"))
+    template = File.read(Rails.root.join("app", "views", "reports", "#{template_name}.html.erb"))
     ERB.new(template).result(binding)
   end
 

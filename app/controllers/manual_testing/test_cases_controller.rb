@@ -1,18 +1,18 @@
 class ManualTesting::TestCasesController < ManualTestingController
-  before_action :set_test_case, except: [:index, :new, :create, :search, :bulk_update]
+  before_action :set_test_case, except: [ :index, :new, :create, :search, :bulk_update ]
 
   def index
     @test_cases = current_organization.manual_test_cases.includes(:created_by, :test_suite)
-    
+
     # Apply filters
     @test_cases = @test_cases.by_status(params[:status]) if params[:status].present?
     @test_cases = @test_cases.by_priority(params[:priority]) if params[:priority].present?
     @test_cases = @test_cases.in_test_suite(params[:test_suite_id]) if params[:test_suite_id].present?
     @test_cases = @test_cases.where("title ILIKE ?", "%#{params[:search]}%") if params[:search].present?
-    
+
     # Pagination
     @test_cases = @test_cases.page(params[:page]).per(25)
-    
+
     @test_suites = current_organization.test_suites.order(:name)
     @summary = {
       total: current_organization.manual_test_cases.count,
@@ -39,15 +39,15 @@ class ManualTesting::TestCasesController < ManualTestingController
     @test_case.created_by = current_user
 
     if @test_case.save
-      render json: { 
-        success: true, 
-        message: 'Test case created successfully',
+      render json: {
+        success: true,
+        message: "Test case created successfully",
         test_case_id: @test_case.uuid
       }
     else
-      render json: { 
-        success: false, 
-        errors: @test_case.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @test_case.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
@@ -58,24 +58,24 @@ class ManualTesting::TestCasesController < ManualTestingController
 
   def update
     @test_case.updated_by = current_user
-    
+
     if @test_case.update(test_case_params)
-      render json: { 
-        success: true, 
-        message: 'Test case updated successfully'
+      render json: {
+        success: true,
+        message: "Test case updated successfully"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @test_case.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @test_case.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @test_case.destroy!
-    
-    render json: { success: true, message: 'Test case deleted successfully' }
+
+    render json: { success: true, message: "Test case deleted successfully" }
   rescue StandardError => e
     render json: { success: false, error: e.message }, status: :unprocessable_entity
   end
@@ -83,11 +83,11 @@ class ManualTesting::TestCasesController < ManualTestingController
   def search
     query = params[:q]
     return render json: [] unless query.present?
-    
+
     test_cases = current_organization.manual_test_cases
                   .where("title ILIKE ? OR steps ILIKE ?", "%#{query}%", "%#{query}%")
                   .limit(20)
-                  
+
     results = test_cases.map do |tc|
       {
         id: tc.uuid,
@@ -97,49 +97,49 @@ class ManualTesting::TestCasesController < ManualTestingController
         test_suite_name: tc.test_suite&.name
       }
     end
-    
+
     render json: results
   end
 
   def bulk_update
     test_case_ids = params[:test_case_ids] || []
     updates = params[:updates] || {}
-    
+
     test_cases = current_organization.manual_test_cases.where(uuid: test_case_ids)
-    
+
     ActiveRecord::Base.transaction do
       test_cases.each do |test_case|
         test_case.updated_by = current_user
         test_case.update!(updates.permit(:status, :priority, :test_suite_id))
       end
     end
-    
-    render json: { 
-      success: true, 
-      message: "#{test_cases.count} test cases updated successfully" 
+
+    render json: {
+      success: true,
+      message: "#{test_cases.count} test cases updated successfully"
     }
   rescue StandardError => e
     render json: { success: false, error: e.message }, status: :unprocessable_entity
   end
 
   def move_to_suite
-    test_suite = params[:test_suite_id].present? ? 
-                 current_organization.test_suites.find_by!(uuid: params[:test_suite_id]) : 
+    test_suite = params[:test_suite_id].present? ?
+                 current_organization.test_suites.find_by!(uuid: params[:test_suite_id]) :
                  nil
-                 
+
     @test_case.test_suite = test_suite
     @test_case.updated_by = current_user
-    
+
     if @test_case.save
-      suite_name = test_suite&.name || 'No Suite'
-      render json: { 
-        success: true, 
-        message: "Test case moved to #{suite_name}" 
+      suite_name = test_suite&.name || "No Suite"
+      render json: {
+        success: true,
+        message: "Test case moved to #{suite_name}"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @test_case.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @test_case.errors.full_messages
       }, status: :unprocessable_entity
     end
   end

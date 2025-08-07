@@ -39,7 +39,7 @@ set :keep_releases, 5
 # set :ssh_options, verify_host_key: :secure
 
 # Puma configuration
-set :puma_threads,    [4, 16]
+set :puma_threads,    [ 4, 16 ]
 set :puma_workers,    0
 set :puma_bind,       "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
 set :puma_state,      "#{shared_path}/tmp/pids/puma.state"
@@ -52,14 +52,14 @@ set :puma_init_active_record, true  # Change to false when not using ActiveRecor
 
 # Node.js and Yarn configuration
 set :nvm_type, :user # or :system, depends on your nvm installation
-set :nvm_node, 'v20.19.0'
-set :nvm_map_bins, %w{node npm yarn}
+set :nvm_node, "v20.19.0"
+set :nvm_map_bins, %w[node npm yarn]
 
 # Yarn configuration
-set :yarn_flags, '--production --silent --no-progress'
+set :yarn_flags, "--production --silent --no-progress"
 
 namespace :puma do
-  desc 'Create Directories for Puma Pids and Sockets'
+  desc "Create Directories for Puma Pids and Sockets"
   task :make_dirs do
     on roles(:app) do
       execute "mkdir -p #{shared_path}/tmp/sockets #{shared_path}/tmp/pids"
@@ -81,22 +81,22 @@ namespace :deploy do
     end
   end
 
-  desc 'Initial Deploy'
+  desc "Initial Deploy"
   task :initial do
     on roles(:app) do
-      before 'deploy:restart', 'puma:start'
-      invoke 'deploy'
+      before "deploy:restart", "puma:start"
+      invoke "deploy"
     end
   end
 
-  desc 'Restart application'
+  desc "Restart application"
   task :restart do
     on roles(:app), in: :sequence, wait: 1 do
-      invoke 'puma:restart'
+      invoke "puma:restart"
     end
   end
 
-  desc 'Upload to shared/config'
+  desc "Upload to shared/config"
   task :upload_yml do
     on roles(:app) do
       execute "mkdir -p #{shared_path}/config"
@@ -105,7 +105,7 @@ namespace :deploy do
     end
   end
 
-  desc 'Seed the database'
+  desc "Seed the database"
   task :seed do
     on roles(:app) do
       within "#{current_path}" do
@@ -116,7 +116,7 @@ namespace :deploy do
     end
   end
 
-  desc 'Build frontend assets'
+  desc "Build frontend assets"
   task :build_assets do
     on roles(:app) do
       within release_path do
@@ -127,7 +127,7 @@ namespace :deploy do
   end
 
   before :check_revision, :check_revision
-  after  'deploy:symlink:shared', 'deploy:build_assets'
-  after  :finishing,    'deploy:cleanup'
-  after  :finishing,    'puma:restart'
+  after  "deploy:symlink:shared", "deploy:build_assets"
+  after  :finishing,    "deploy:cleanup"
+  after  :finishing,    "puma:restart"
 end

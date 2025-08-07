@@ -16,7 +16,7 @@ RSpec.describe Admin::DashboardController, type: :controller do
       it 'assigns stats' do
         create_list(:user, 3)
         create_list(:organization, 2)
-        
+
         get :index
         expect(assigns(:stats)).to include(
           :total_users,

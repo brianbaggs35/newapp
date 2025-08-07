@@ -1,9 +1,9 @@
 class TestSuite < ApplicationRecord
   belongs_to :organization
-  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :created_by, class_name: "User", optional: true
   has_many :test_cases, dependent: :destroy
   has_many :manual_test_cases, dependent: :destroy
-  
+
   validates :name, presence: true, length: { minimum: 1, maximum: 255 }
   validates :project, presence: true, length: { minimum: 1, maximum: 255 }
   validates :description, length: { maximum: 1000 }
@@ -35,11 +35,11 @@ class TestSuite < ApplicationRecord
 
   def test_status
     if failed_tests > 0
-      'failed'
+      "failed"
     elsif skipped_tests > 0
-      'partial'
+      "partial"
     else
-      'passed'
+      "passed"
     end
   end
 

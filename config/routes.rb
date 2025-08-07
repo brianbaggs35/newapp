@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: "users/registrations"
   }, path_names: {
-    sign_up: 'register'
+    sign_up: "register"
   }
   root "homepage#index"
 
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   # Organization management
   resources :organizations do
-    resources :users, only: [:index, :show, :edit, :update, :destroy], controller: 'organization_users' do
+    resources :users, only: [ :index, :show, :edit, :update, :destroy ], controller: "organization_users" do
       member do
         patch :change_role
       end
@@ -28,27 +28,27 @@ Rails.application.routes.draw do
 
   # System Admin routes
   namespace :admin do
-    get '/dashboard', to: 'dashboard#index'
+    get "/dashboard", to: "dashboard#index"
     resources :users do
       member do
         patch :confirm
       end
     end
     resources :organizations
-    resources :invitation_codes, only: [:index, :create, :destroy]
-    resource :smtp_settings, only: [:show, :update] do
+    resources :invitation_codes, only: [ :index, :create, :destroy ]
+    resource :smtp_settings, only: [ :show, :update ] do
       post :test_email
     end
   end
 
   # Automated Testing Routes
   namespace :automated_testing do
-    resources :uploads, only: [:index, :new, :create, :update, :destroy], param: :uuid do
+    resources :uploads, only: [ :index, :new, :create, :update, :destroy ], param: :uuid do
       collection do
         post :process_xml
       end
     end
-    resources :test_results, only: [:index, :show], param: :uuid do
+    resources :test_results, only: [ :index, :show ], param: :uuid do
       collection do
         get :search
       end
@@ -59,7 +59,7 @@ Rails.application.routes.draw do
         patch :assign
       end
     end
-    resources :reports, only: [:index, :show] do
+    resources :reports, only: [ :index, :show ] do
       collection do
         post :generate
         get :preview
@@ -80,13 +80,13 @@ Rails.application.routes.draw do
     end
     resources :test_suites, param: :uuid
     resources :test_runs, param: :uuid do
-      resources :items, controller: 'test_run_items', param: :uuid do
+      resources :items, controller: "test_run_items", param: :uuid do
         member do
           patch :update_status
         end
       end
     end
-    resources :reports, only: [:index, :show] do
+    resources :reports, only: [ :index, :show ] do
       collection do
         post :generate
         get :preview
@@ -96,23 +96,23 @@ Rails.application.routes.draw do
 
   # Settings Routes
   namespace :settings do
-    resource :organization, only: [:show, :edit, :update] do
-      resources :users, except: [:new, :create] do
+    resource :organization, only: [ :show, :edit, :update ] do
+      resources :users, except: [ :new, :create ] do
         member do
           patch :change_role
           delete :remove
         end
       end
-      resources :invitations, only: [:index, :create, :destroy]
+      resources :invitations, only: [ :index, :create, :destroy ]
     end
-    resource :profile, only: [:show, :edit, :update]
-    resource :password, only: [:edit, :update]
+    resource :profile, only: [ :show, :edit, :update ]
+    resource :password, only: [ :edit, :update ]
   end
 
   # API Routes
   namespace :api do
-    resources :test_runs, only: [:index, :show], param: :uuid
-    resources :test_results, only: [:index, :show], param: :uuid
+    resources :test_runs, only: [ :index, :show ], param: :uuid
+    resources :test_results, only: [ :index, :show ], param: :uuid
     resources :manual_test_cases, param: :uuid
     resources :manual_test_runs, param: :uuid
     namespace :reports do

@@ -18,14 +18,14 @@ class Settings::OrganizationsController < SettingsController
 
   def update
     if @organization.update(organization_params)
-      render json: { 
-        success: true, 
-        message: 'Organization updated successfully'
+      render json: {
+        success: true,
+        message: "Organization updated successfully"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @organization.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @organization.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
@@ -38,7 +38,7 @@ class Settings::OrganizationsController < SettingsController
 
   def ensure_organization_access
     unless current_user.can_see_organization_management?
-      redirect_to root_path, alert: 'Access denied.'
+      redirect_to root_path, alert: "Access denied."
     end
   end
 

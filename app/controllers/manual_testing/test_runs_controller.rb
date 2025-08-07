@@ -1,5 +1,5 @@
 class ManualTesting::TestRunsController < ManualTestingController
-  before_action :set_test_run, except: [:index, :new, :create]
+  before_action :set_test_run, except: [ :index, :new, :create ]
 
   def index
     @test_runs = current_organization.manual_test_runs.includes(:created_by)
@@ -9,13 +9,13 @@ class ManualTesting::TestRunsController < ManualTestingController
 
   def show
     @items_by_status = {
-      'to_do' => @test_run.manual_test_run_items.to_do.includes(:manual_test_case, :executed_by),
-      'in_progress' => @test_run.manual_test_run_items.in_progress.includes(:manual_test_case, :executed_by),
-      'blocked' => @test_run.manual_test_run_items.blocked.includes(:manual_test_case, :executed_by),
-      'failed' => @test_run.manual_test_run_items.failed.includes(:manual_test_case, :executed_by),
-      'passed' => @test_run.manual_test_run_items.passed.includes(:manual_test_case, :executed_by)
+      "to_do" => @test_run.manual_test_run_items.to_do.includes(:manual_test_case, :executed_by),
+      "in_progress" => @test_run.manual_test_run_items.in_progress.includes(:manual_test_case, :executed_by),
+      "blocked" => @test_run.manual_test_run_items.blocked.includes(:manual_test_case, :executed_by),
+      "failed" => @test_run.manual_test_run_items.failed.includes(:manual_test_case, :executed_by),
+      "passed" => @test_run.manual_test_run_items.passed.includes(:manual_test_case, :executed_by)
     }
-    
+
     @summary = {
       total: @test_run.total_count,
       to_do: @test_run.to_do_count,
@@ -43,31 +43,31 @@ class ManualTesting::TestRunsController < ManualTestingController
 
     ActiveRecord::Base.transaction do
       @test_run.save!
-      
+
       # Add selected test cases to the run
       test_case_ids = params[:test_case_ids] || []
       test_cases = current_organization.manual_test_cases.where(uuid: test_case_ids)
-      
+
       test_cases.each do |test_case|
         @test_run.manual_test_run_items.create!(
           manual_test_case: test_case,
           organization: current_organization,
-          status: 'to_do'
+          status: "to_do"
         )
       end
-      
-      @test_run.update!(status: 'in_progress') if @test_run.manual_test_run_items.any?
+
+      @test_run.update!(status: "in_progress") if @test_run.manual_test_run_items.any?
     end
 
-    render json: { 
-      success: true, 
-      message: 'Test run created successfully',
+    render json: {
+      success: true,
+      message: "Test run created successfully",
       test_run_id: @test_run.uuid
     }
   rescue StandardError => e
-    render json: { 
-      success: false, 
-      error: e.message 
+    render json: {
+      success: false,
+      error: e.message
     }, status: :unprocessable_entity
   end
 
@@ -76,22 +76,22 @@ class ManualTesting::TestRunsController < ManualTestingController
 
   def update
     if @test_run.update(test_run_params)
-      render json: { 
-        success: true, 
-        message: 'Test run updated successfully'
+      render json: {
+        success: true,
+        message: "Test run updated successfully"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @test_run.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @test_run.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @test_run.destroy!
-    
-    render json: { success: true, message: 'Test run deleted successfully' }
+
+    render json: { success: true, message: "Test run deleted successfully" }
   rescue StandardError => e
     render json: { success: false, error: e.message }, status: :unprocessable_entity
   end

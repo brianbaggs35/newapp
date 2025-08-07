@@ -10,7 +10,7 @@ FactoryBot.define do
     category { "Functional" }
     tags { "smoke, regression" }
     estimated_time { 15 }
-    
+
     association :organization
     association :created_by, factory: :user
     association :updated_by, factory: :user
@@ -22,7 +22,7 @@ FactoryBot.define do
     notes { nil }
     execution_time { nil }
     executed_at { Time.current }
-    
+
     association :manual_test_case
     association :executed_by, factory: :user
     association :organization
@@ -37,7 +37,7 @@ FactoryBot.define do
     environment_details { "Test environment details" }
     entry_criteria { "All features are developed" }
     exit_criteria { "All tests pass with 95% success rate" }
-    
+
     association :organization
     association :created_by, factory: :user
   end

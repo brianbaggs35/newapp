@@ -1,7 +1,7 @@
 class TestExecutionsController < ApplicationController
   before_action :ensure_organization_member!
   before_action :set_organization
-  before_action :set_test_execution, only: [:show, :update, :destroy]
+  before_action :set_test_execution, only: [ :show, :update, :destroy ]
 
   def index
     @test_executions = @organization.test_executions
@@ -11,7 +11,7 @@ class TestExecutionsController < ApplicationController
     # Apply filters
     @test_executions = @test_executions.by_status(params[:status]) if params[:status].present?
     @test_executions = @test_executions.by_executor(User.find(params[:executor_id])) if params[:executor_id].present?
-    
+
     if params[:cycle_id].present?
       @test_executions = @test_executions.where(test_execution_cycle_id: params[:cycle_id])
     end
@@ -25,7 +25,7 @@ class TestExecutionsController < ApplicationController
     end
 
     # Group by status for Kanban board
-    if params[:format] == 'kanban'
+    if params[:format] == "kanban"
       kanban_data = TestExecution.statuses.keys.map do |status|
         {
           status: status,
@@ -62,9 +62,9 @@ class TestExecutionsController < ApplicationController
 
   def create
     @manual_test_case = @organization.manual_test_cases.find(params[:manual_test_case_id])
-    
+
     unless @manual_test_case.can_be_executed?
-      render json: { error: 'Test case is not approved for execution' }, status: :unprocessable_entity
+      render json: { error: "Test case is not approved for execution" }, status: :unprocessable_entity
       return
     end
 
@@ -81,7 +81,7 @@ class TestExecutionsController < ApplicationController
 
   def update
     unless current_user == @test_execution.executed_by || current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -94,7 +94,7 @@ class TestExecutionsController < ApplicationController
 
   def destroy
     unless current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -104,15 +104,15 @@ class TestExecutionsController < ApplicationController
 
   def update_status
     @test_execution = @organization.test_executions.find(params[:id])
-    
+
     unless current_user == @test_execution.executed_by || current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
     new_status = params[:status]
     unless TestExecution.statuses.keys.include?(new_status)
-      render json: { error: 'Invalid status' }, status: :unprocessable_entity
+      render json: { error: "Invalid status" }, status: :unprocessable_entity
       return
     end
 
@@ -134,7 +134,7 @@ class TestExecutionsController < ApplicationController
       end,
       by_executor: @organization.test_executions
                                  .joins(:executed_by)
-                                 .group('users.email')
+                                 .group("users.email")
                                  .count,
       recent_executions: @organization.test_executions
                                      .recent

@@ -8,20 +8,20 @@ class Admin::SmtpSettingsController < ApplicationController
 
   def update
     @smtp_settings = SmtpSetting.first_or_initialize
-    
+
     if @smtp_settings.update(smtp_settings_params)
       # Update ActionMailer configuration
       ActionMailer::Base.delivery_method = :smtp
       ActionMailer::Base.smtp_settings = @smtp_settings.to_hash
-      
-      render json: { 
-        success: true, 
-        message: 'SMTP settings updated successfully' 
+
+      render json: {
+        success: true,
+        message: "SMTP settings updated successfully"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @smtp_settings.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @smtp_settings.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
@@ -29,11 +29,11 @@ class Admin::SmtpSettingsController < ApplicationController
   def test_email
     begin
       AdminMailer.test_email(current_user.email).deliver_now
-      render json: { success: true, message: 'Test email sent successfully' }
+      render json: { success: true, message: "Test email sent successfully" }
     rescue => e
-      render json: { 
-        success: false, 
-        message: "Failed to send test email: #{e.message}" 
+      render json: {
+        success: false,
+        message: "Failed to send test email: #{e.message}"
       }, status: :unprocessable_entity
     end
   end

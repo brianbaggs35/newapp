@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TestRun, type: :model do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization: organization) }
-  
+
   describe 'associations' do
     it { should belong_to(:organization) }
     it { should belong_to(:created_by).class_name('User') }
@@ -64,7 +64,7 @@ RSpec.describe TestRun, type: :model do
 
     context 'with no test results' do
       let(:empty_test_run) { create(:test_run, organization: organization) }
-      
+
       it 'returns 0 for success rate' do
         expect(empty_test_run.success_rate).to eq(0)
       end

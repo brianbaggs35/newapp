@@ -1,18 +1,18 @@
 class TestExecution < ApplicationRecord
   belongs_to :manual_test_case
-  belongs_to :executed_by, class_name: 'User'
+  belongs_to :executed_by, class_name: "User"
   belongs_to :organization
   belongs_to :test_execution_cycle, optional: true
 
   validates :status, inclusion: { in: %w[pending in_progress passed failed blocked] }
   validates :execution_time, numericality: { greater_than: 0 }, allow_nil: true
 
-  enum :status, { 
-    pending: 'pending', 
-    in_progress: 'in_progress', 
-    passed: 'passed', 
-    failed: 'failed', 
-    blocked: 'blocked' 
+  enum :status, {
+    pending: "pending",
+    in_progress: "in_progress",
+    passed: "passed",
+    failed: "failed",
+    blocked: "blocked"
   }
 
   scope :recent, -> { order(executed_at: :desc) }
@@ -47,7 +47,7 @@ class TestExecution < ApplicationRecord
   end
 
   def is_successful?
-    status == 'passed'
+    status == "passed"
   end
 
   def has_defect?
@@ -70,10 +70,10 @@ class TestExecution < ApplicationRecord
 
   def set_execution_timestamps
     case status
-    when 'in_progress'
+    when "in_progress"
       self.started_at ||= Time.current
       self.executed_at ||= Time.current
-    when 'passed', 'failed', 'blocked'
+    when "passed", "failed", "blocked"
       self.completed_at ||= Time.current
       self.executed_at ||= Time.current
     end

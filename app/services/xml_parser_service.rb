@@ -19,11 +19,11 @@ class XmlParserService
 
   def parse_xml
     doc = Nokogiri::XML(File.read(file_path))
-    
+
     # Handle both JUnit and TestNG formats
-    if doc.xpath('//testsuite').any?
+    if doc.xpath("//testsuite").any?
       parse_junit_format(doc)
-    elsif doc.xpath('//suite').any?
+    elsif doc.xpath("//suite").any?
       parse_testng_format(doc)
     else
       raise "Unsupported XML format"
@@ -41,23 +41,23 @@ class XmlParserService
       test_results: []
     }
 
-    doc.xpath('//testsuite').each do |testsuite|
-      suite_name = testsuite['name'] || 'Unknown Suite'
-      
-      testsuite.xpath('.//testcase').each do |testcase|
+    doc.xpath("//testsuite").each do |testsuite|
+      suite_name = testsuite["name"] || "Unknown Suite"
+
+      testsuite.xpath(".//testcase").each do |testcase|
         result = parse_junit_testcase(testcase, suite_name)
         test_run_data[:test_results] << result
-        
+
         # Update counters
         test_run_data[:total_tests] += 1
         test_run_data[:duration] += result[:duration] || 0
-        
+
         case result[:status]
-        when 'passed'
+        when "passed"
           test_run_data[:passed_tests] += 1
-        when 'failed'
+        when "failed"
           test_run_data[:failed_tests] += 1
-        when 'skipped'
+        when "skipped"
           test_run_data[:skipped_tests] += 1
         end
       end
@@ -68,10 +68,10 @@ class XmlParserService
 
   def parse_junit_testcase(testcase, suite_name)
     result = {
-      class_name: testcase['classname'] || suite_name,
-      test_name: testcase['name'],
-      duration: testcase['time']&.to_f,
-      status: 'passed',
+      class_name: testcase["classname"] || suite_name,
+      test_name: testcase["name"],
+      duration: testcase["time"]&.to_f,
+      status: "passed",
       failure_message: nil,
       error_message: nil,
       error_type: nil,
@@ -80,33 +80,33 @@ class XmlParserService
     }
 
     # Check for failures
-    failure = testcase.xpath('.//failure').first
+    failure = testcase.xpath(".//failure").first
     if failure
-      result[:status] = 'failed'
+      result[:status] = "failed"
       result[:failure_message] = failure.text&.strip
-      result[:error_type] = failure['type']
+      result[:error_type] = failure["type"]
     end
 
     # Check for errors
-    error = testcase.xpath('.//error').first
+    error = testcase.xpath(".//error").first
     if error
-      result[:status] = 'failed'
+      result[:status] = "failed"
       result[:error_message] = error.text&.strip
-      result[:error_type] = error['type']
+      result[:error_type] = error["type"]
     end
 
     # Check for skipped
-    skipped = testcase.xpath('.//skipped').first
+    skipped = testcase.xpath(".//skipped").first
     if skipped
-      result[:status] = 'skipped'
+      result[:status] = "skipped"
       result[:failure_message] = skipped.text&.strip
     end
 
     # System output
-    system_out = testcase.xpath('.//system-out').first
+    system_out = testcase.xpath(".//system-out").first
     result[:system_out] = system_out&.text&.strip
 
-    system_err = testcase.xpath('.//system-err').first
+    system_err = testcase.xpath(".//system-err").first
     result[:system_err] = system_err&.text&.strip
 
     result
@@ -116,7 +116,7 @@ class XmlParserService
     # Similar implementation for TestNG format
     # This would parse TestNG specific XML structure
     test_run_data = {
-      name: doc.xpath('//suite').first&.[]('name') || 'TestNG Run',
+      name: doc.xpath("//suite").first&.[]("name") || "TestNG Run",
       total_tests: 0,
       passed_tests: 0,
       failed_tests: 0,
@@ -125,19 +125,19 @@ class XmlParserService
       test_results: []
     }
 
-    doc.xpath('//test-method').each do |test_method|
+    doc.xpath("//test-method").each do |test_method|
       result = parse_testng_testmethod(test_method)
       test_run_data[:test_results] << result
-      
+
       test_run_data[:total_tests] += 1
       test_run_data[:duration] += result[:duration] || 0
-      
+
       case result[:status]
-      when 'PASS'
+      when "PASS"
         test_run_data[:passed_tests] += 1
-      when 'FAIL'
+      when "FAIL"
         test_run_data[:failed_tests] += 1
-      when 'SKIP'
+      when "SKIP"
         test_run_data[:skipped_tests] += 1
       end
     end
@@ -147,30 +147,30 @@ class XmlParserService
 
   def parse_testng_testmethod(test_method)
     {
-      class_name: test_method.xpath('../..')[0]&.[]('name') || 'Unknown Class',
-      test_name: test_method['name'],
-      duration: test_method['duration-ms']&.to_f&./(1000),
-      status: map_testng_status(test_method['status']),
-      failure_message: test_method.xpath('.//message').text&.strip,
-      error_message: test_method.xpath('.//full-stacktrace').text&.strip,
-      error_type: test_method.xpath('.//exception').first&.[]('class')
+      class_name: test_method.xpath("../..")[0]&.[]("name") || "Unknown Class",
+      test_name: test_method["name"],
+      duration: test_method["duration-ms"]&.to_f&./(1000),
+      status: map_testng_status(test_method["status"]),
+      failure_message: test_method.xpath(".//message").text&.strip,
+      error_message: test_method.xpath(".//full-stacktrace").text&.strip,
+      error_type: test_method.xpath(".//exception").first&.[]("class")
     }
   end
 
   def map_testng_status(status)
     case status
-    when 'PASS' then 'passed'
-    when 'FAIL' then 'failed'  
-    when 'SKIP' then 'skipped'
-    else 'passed'
+    when "PASS" then "passed"
+    when "FAIL" then "failed"
+    when "SKIP" then "skipped"
+    else "passed"
     end
   end
 
   def extract_test_run_name(doc)
     # Try to extract a meaningful name from the XML
-    suite_name = doc.xpath('//testsuite').first&.[]('name')
+    suite_name = doc.xpath("//testsuite").first&.[]("name")
     return suite_name if suite_name.present?
-    
+
     "Test Run #{Time.current.strftime('%Y-%m-%d %H:%M')}"
   end
 
@@ -179,7 +179,7 @@ class XmlParserService
       name: data[:name],
       organization: organization,
       created_by: user,
-      status: 'completed',
+      status: "completed",
       total_tests: data[:total_tests],
       passed_tests: data[:passed_tests],
       failed_tests: data[:failed_tests],

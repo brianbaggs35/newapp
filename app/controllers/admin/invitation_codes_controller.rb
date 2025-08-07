@@ -14,15 +14,15 @@ class Admin::InvitationCodesController < ApplicationController
     @invitation_code.generate_code
 
     if @invitation_code.save
-      render json: { 
-        success: true, 
+      render json: {
+        success: true,
         invitation_code: @invitation_code,
-        message: 'Invitation code generated successfully' 
+        message: "Invitation code generated successfully"
       }
     else
-      render json: { 
-        success: false, 
-        errors: @invitation_code.errors.full_messages 
+      render json: {
+        success: false,
+        errors: @invitation_code.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
@@ -30,8 +30,8 @@ class Admin::InvitationCodesController < ApplicationController
   def destroy
     @invitation_code = InvitationCode.find(params[:id])
     @invitation_code.destroy
-    
-    render json: { success: true, message: 'Invitation code deleted successfully' }
+
+    render json: { success: true, message: "Invitation code deleted successfully" }
   end
 
   private

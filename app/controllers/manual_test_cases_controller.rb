@@ -1,7 +1,7 @@
 class ManualTestCasesController < ApplicationController
   before_action :ensure_organization_member!
   before_action :set_organization
-  before_action :set_manual_test_case, only: [:show, :update, :destroy]
+  before_action :set_manual_test_case, only: [ :show, :update, :destroy ]
 
   def index
     @manual_test_cases = @organization.manual_test_cases
@@ -34,7 +34,7 @@ class ManualTestCasesController < ApplicationController
 
   def create
     unless current_user.can_manage_organization? || current_user.test_runner?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -50,7 +50,7 @@ class ManualTestCasesController < ApplicationController
 
   def update
     unless current_user.can_manage_organization? || current_user == @manual_test_case.created_by
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -65,7 +65,7 @@ class ManualTestCasesController < ApplicationController
 
   def destroy
     unless current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -75,7 +75,7 @@ class ManualTestCasesController < ApplicationController
 
   def bulk_update_status
     unless current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 
@@ -83,7 +83,7 @@ class ManualTestCasesController < ApplicationController
     new_status = params[:status]
 
     unless ManualTestCase.statuses.keys.include?(new_status)
-      render json: { error: 'Invalid status' }, status: :unprocessable_entity
+      render json: { error: "Invalid status" }, status: :unprocessable_entity
       return
     end
 
@@ -113,7 +113,7 @@ class ManualTestCasesController < ApplicationController
         }
       end,
       categories: @organization.manual_test_cases
-                                .where.not(category: [nil, ''])
+                                .where.not(category: [ nil, "" ])
                                 .group(:category)
                                 .count,
       recent_test_cases: @organization.manual_test_cases

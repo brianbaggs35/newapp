@@ -3,7 +3,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   # Use UUID as primary key for all models
   self.implicit_order_column = "created_at"
-  
+
   def to_param
     uuid
   end
