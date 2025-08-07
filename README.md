@@ -1,19 +1,24 @@
-# Test App - React on Rails Integration
+# QA Platform - Comprehensive Testing Management System
 
-A Ruby on Rails 8.0 application with full React 19.1.0 integration for modern frontend development.
+A Ruby on Rails 8.0 application with full React 19.1.0 integration for comprehensive automated and manual testing management.
 
 ## Features
 
 - **Rails 8.0.2** with **React 19.1.0** integration
-- **esbuild** for fast JavaScript bundling
-- **Tailwind CSS 4.1.11** for utility-first styling
-- **Flowbite React** components library
-- **Jest** testing framework with React Testing Library
-- Automated testing dashboard with import/export capabilities
+- **Invitation-based Authentication** with role management (System Admin, Owner, Admin, Member)
+- **Comprehensive Dashboard** with real-time analytics and Chart.js visualizations
+- **System Admin Panel** with user/organization management and SMTP configuration
+- **Onboarding System** with wizard-style setup for new organizations
+- **Automated Testing** upload, analysis, and reporting
+- **Manual Testing** case management and execution tracking
+- **Capistrano Deployment** ready for AWS and other cloud platforms
+- **Turbo Streams** for dynamic page updates
+- **Modern UI/UX** with Tailwind CSS 4.1.11 and Flowbite React components
+- **Comprehensive Testing** with RSpec and Jest
 
 ## Prerequisites
 
-- Ruby 3.2.3 (see `.ruby-version`)
+- Ruby 3.4.5 (see `.ruby-version`)
 - Node.js 20.19+ (see `.node-version`) 
 - Yarn package manager
 - PostgreSQL (for database)
@@ -26,18 +31,18 @@ A Ruby on Rails 8.0 application with full React 19.1.0 integration for modern fr
    yarn install
    ```
 
-2. **Build assets:**
+2. **Database setup:**
    ```bash
-   # Production build (optimized, ~657KB)
-   yarn build && yarn build:css
-   
-   # Development build (with source maps, ~1.9MB)
-   yarn build:dev && yarn build:css
+   bin/rails db:create db:migrate db:seed
    ```
 
-3. **Database setup:**
+3. **Build assets:**
    ```bash
-   bin/rails db:create db:migrate
+   # Production build (optimized)
+   yarn build && yarn build:css
+   
+   # Development build (with source maps)
+   yarn build:dev && yarn build:css
    ```
 
 4. **Start the development server:**
@@ -50,61 +55,122 @@ A Ruby on Rails 8.0 application with full React 19.1.0 integration for modern fr
 5. **Visit the application:**
    Open http://localhost:3000
 
-## React Integration
+## Authentication & User Management
 
-### How React Components Work with Rails
+### Invitation System
 
-This application demonstrates seamless React integration within Rails views:
+The QA Platform uses an invitation-only registration system:
 
-1. **React Mount Point**: Rails views include a `<div id="react-root"></div>` element
-2. **Component Mounting**: React components automatically mount using `createRoot()` 
-3. **Turbo Integration**: Components remount properly on Turbo navigation
-4. **Asset Pipeline**: esbuild bundles React components, Rails serves them
+- **System Admins** can generate invitation codes for new organization owners or users
+- **Organization Owners** can invite users to their organization
+- **Two types of invitations:**
+  - **Owner codes**: For subscription purchasers to create new organizations
+  - **User codes**: For inviting members to existing organizations
 
-### Adding React Components to Rails Views
+### User Roles
 
-1. **Create a React component** in `app/javascript/components/`:
-   ```jsx
-   // app/javascript/components/MyComponent.jsx
-   import React from 'react';
+- **System Admin**: Full platform access, manages all organizations and users
+- **Owner**: Organization owner with full organization management rights
+- **Admin**: Organization administrator with user management rights  
+- **Member**: Regular organization member with testing access
+
+### Creating the First System Admin
+
+```bash
+rails console
+User.create!(
+  email: 'admin@example.com',
+  password: 'secure_password',
+  password_confirmation: 'secure_password',
+  role: 'system_admin',
+  confirmed_at: Time.current,
+  onboarding_completed: true
+)
+```
+
+## Capistrano Deployment
+
+### Initial Setup
+
+1. **Configure deployment settings:**
    
-   export default function MyComponent({ title }) {
-     return <h1>{title}</h1>;
-   }
+   Edit `config/deploy.rb`:
+   ```ruby
+   set :repo_url, "git@github.com:your-username/your-repo.git"
+   set :deploy_to, "/var/www/qa_platform"
    ```
 
-2. **Add the mount point** in your Rails view:
-   ```erb
-   <!-- app/views/my_page/index.html.erb -->
-   <div id="react-root" data-props='<%= { title: "Hello from Rails!" }.to_json %>'></div>
-   ```
-
-3. **Update the mounting logic** in `app/javascript/components/index.jsx`:
-   ```jsx
-   import MyComponent from './MyComponent';
+2. **Configure production server:**
    
-   function mountReactApp() {
-     const container = document.getElementById("react-root");
-     if (container) {
-       const props = JSON.parse(container.dataset.props || '{}');
-       const root = createRoot(container);
-       root.render(<MyComponent {...props} />);
-     }
-   }
+   Edit `config/deploy/production.rb`:
+   ```ruby
+   server "your-production-server.com", user: "deploy", roles: %w{app db web}
    ```
 
-4. **Build and reload:**
+3. **Setup SSH keys:**
    ```bash
-   yarn build && yarn build:css
+   # Copy your SSH public key to the server
+   ssh-copy-id deploy@your-production-server.com
    ```
 
-### Available React Libraries
+### Deployment Commands
 
-- **React 19.1.0** - Core React library
-- **React Router 7.7.0** - Client-side routing
-- **Flowbite React** - Tailwind-based components
-- **React Icons** - Icon library  
-- **Chart.js + React-ChartJS-2** - Data visualization
+```bash
+# Initial deployment
+cap production deploy:initial
+
+# Regular deployment
+cap production deploy
+
+# Upload configuration files
+cap production deploy:upload_yml
+
+# Restart application
+cap production puma:restart
+
+# Run database migrations
+cap production db:migrate
+
+# Seed database (first deployment only)  
+cap production deploy:seed
+```
+
+### Server Requirements
+
+- Ruby 3.4.5
+- Node.js 20.19+ with Yarn
+- PostgreSQL
+- Nginx (recommended)
+- SSL certificate (Let's Encrypt recommended)
+
+### Environment Variables
+
+Create `.env` file on the server with:
+```bash
+RAILS_MASTER_KEY=your_master_key
+DATABASE_URL=postgresql://user:password@localhost/qa_platform_production
+RAILS_ENV=production
+NODE_ENV=production
+```
+
+## System Admin Panel
+
+Access at `/admin/dashboard` (System Admin role required):
+
+### Features
+- **Dashboard**: User and organization statistics
+- **User Management**: View, manage, and confirm users
+- **Organization Management**: Oversee all organizations
+- **Invitation Codes**: Generate and manage invitation codes
+- **SMTP Settings**: Configure email delivery settings
+
+### Generating Invitation Codes
+
+1. Navigate to Admin Dashboard → Invitation Codes
+2. Click "Generate New Code"
+3. Select code type (Owner or User)
+4. Set expiration and usage limits
+5. Send the code via email to new users
 
 ## Testing
 
@@ -112,80 +178,82 @@ This application demonstrates seamless React integration within Rails views:
 ```bash
 yarn test                # Run all tests
 yarn test:watch         # Watch mode
-yarn test:coverage      # With coverage report
+yarn test:coverage      # With coverage report (85% target)
 ```
 
 ### Run Rails Tests  
 ```bash
-bundle exec rspec       # RSpec tests
-bin/rails test          # Minitest (if used)
+bundle exec rspec                    # RSpec tests
+bundle exec rspec --format RspecJunitFormatter --out tmp/rspec_results.xml
 ```
 
-### Integration Test
+### Code Quality
 ```bash
-node test-react-integration.js
-```
-
-### Verify React Integration
-```bash
-# Quick verification that React is working
-yarn build && yarn build:css  # Build assets
-yarn test                     # Run all tests (52 tests should pass)
-node test-react-integration.js # Verify integration
+bundle exec rubocop              # Ruby linting
+yarn lint                        # JavaScript linting
+bundle exec brakeman             # Security scanning
 ```
 
 ## Development Workflow
 
-1. **Start development server:**
-   ```bash
-   bin/dev  # Starts Rails + asset watching
-   ```
+### Frontend Development
 
-2. **Edit React components** in `app/javascript/components/`
+1. **React Components**: Located in `app/javascript/components/`
+2. **Styling**: Tailwind CSS with Flowbite React components
+3. **Charts**: Chart.js integration for analytics
+4. **Real-time Updates**: Turbo Streams for dynamic content
 
-3. **Assets rebuild automatically** (with `bin/dev`)
+### Backend Development
 
-4. **Test changes:**
-   ```bash
-   yarn test              # React tests
-   bundle exec rspec      # Rails tests  
-   ```
+1. **Controllers**: RESTful APIs with JSON and Turbo Stream responses
+2. **Models**: Comprehensive validations and associations
+3. **Services**: Business logic separation
+4. **Background Jobs**: Sidekiq for email and processing
 
-## File Structure
+### Testing Strategy
 
-```
-app/
-├── javascript/
-│   ├── application.js          # Main entry point
-│   ├── components/             # React components
-│   │   ├── index.jsx          # React mounting logic
-│   │   ├── App.jsx            # Main app component
-│   │   ├── Home.jsx           # Home page component
-│   │   └── tests/             # Test dashboard components
-│   ├── controllers/           # Stimulus controllers
-│   └── routes/               # React routing
-├── assets/
-│   ├── builds/               # Built JavaScript and CSS
-│   └── stylesheets/         # Source stylesheets
-└── views/
-    └── homepage/
-        └── index.html.erb    # Rails view with React mount
+1. **RSpec**: Model, controller, and integration tests
+2. **FactoryBot**: Test data generation
+3. **Jest**: React component testing
+4. **Capybara**: End-to-end browser testing
+
+## API Documentation
+
+### Dashboard Stats API
+
+```bash
+GET /dashboard/stats
 ```
 
-## Production Deployment
+Returns comprehensive statistics for automated and manual testing.
 
-1. **Build production assets:**
-   ```bash
-   RAILS_ENV=production yarn build
-   RAILS_ENV=production yarn build:css
-   RAILS_ENV=production bundle exec rails assets:precompile
-   ```
+### Authentication API
 
-2. **Deploy with your preferred method** (Kamal, Docker, Heroku, etc.)
+Uses Devise with JSON support for API authentication.
 
-## Documentation
+## Troubleshooting
 
-- [Detailed React Integration Guide](REACT_INTEGRATION.md)
-- [Rails 8.0 Guides](https://guides.rubyonrails.org/)
-- [React Documentation](https://react.dev/)
-- [Tailwind CSS Docs](https://tailwindcss.com/docs)
+### Common Issues
+
+1. **Asset Build Failures**: Ensure Node.js and Yarn are properly installed
+2. **Database Connection**: Verify PostgreSQL is running and configured
+3. **Permission Errors**: Check file permissions and user access
+4. **Missing Dependencies**: Run `bundle install` and `yarn install`
+
+### Logs
+
+- Rails: `log/production.log`
+- Puma: `log/puma.error.log`  
+- Deployment: Check Capistrano output
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add comprehensive tests
+4. Ensure 85%+ test coverage
+5. Submit a pull request
+
+## License
+
+This QA Platform is proprietary software. All rights reserved.

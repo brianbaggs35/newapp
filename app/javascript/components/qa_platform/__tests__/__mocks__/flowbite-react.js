@@ -46,30 +46,20 @@ export const Badge = ({ color, children }) => (
   <span data-testid="badge" data-color={color}>{children}</span>
 );
 
-export const Table = {
-  Root: ({ children, hoverable }) => <table data-testid="table">{children}</table>,
-  Head: ({ children }) => <thead data-testid="table-head">{children}</thead>,
-  HeadCell: ({ children }) => <th data-testid="table-head-cell">{children}</th>,
-  Body: ({ children }) => <tbody data-testid="table-body">{children}</tbody>,
-  Row: ({ children, className }) => <tr className={className} data-testid="table-row">{children}</tr>,
-  Cell: ({ children, className }) => <td className={className} data-testid="table-cell">{children}</td>
-};
+export const Table = ({ children, hoverable }) => <table data-testid="table">{children}</table>;
 
-// Make Table callable as a component
-Table.displayName = 'Table';
-Object.assign(Table, Table.Root);
+Table.Head = ({ children }) => <thead data-testid="table-head">{children}</thead>;
+Table.HeadCell = ({ children }) => <th data-testid="table-head-cell">{children}</th>;
+Table.Body = ({ children }) => <tbody data-testid="table-body">{children}</tbody>;
+Table.Row = ({ children, className }) => <tr className={className} data-testid="table-row">{children}</tr>;
+Table.Cell = ({ children, className }) => <td className={className} data-testid="table-cell">{children}</td>;
 
-export const Modal = {
-  Root: ({ show, onClose, children }) => 
-    show ? <div data-testid="modal" onClose={onClose}>{children}</div> : null,
-  Header: ({ children }) => <div data-testid="modal-header">{children}</div>,
-  Body: ({ children }) => <div data-testid="modal-body">{children}</div>,
-  Footer: ({ children }) => <div data-testid="modal-footer">{children}</div>
-};
+export const Modal = ({ show, onClose, children }) => 
+  show ? <div data-testid="modal" onClose={onClose}>{children}</div> : null;
 
-// Make Modal callable as a component  
-Modal.displayName = 'Modal';
-Object.assign(Modal, Modal.Root);
+Modal.Header = ({ children }) => <div data-testid="modal-header">{children}</div>;
+Modal.Body = ({ children }) => <div data-testid="modal-body">{children}</div>;
+Modal.Footer = ({ children }) => <div data-testid="modal-footer">{children}</div>;
 
 export const TextInput = ({ placeholder, value, onChange, ...props }) => (
   <input

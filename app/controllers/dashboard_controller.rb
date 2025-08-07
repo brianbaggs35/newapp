@@ -19,11 +19,23 @@ class DashboardController < ApplicationController
 
   def stats
     if current_user.system_admin?
-      render json: calculate_system_admin_stats
+      stats = calculate_system_admin_stats
     elsif current_user.organization
-      render json: calculate_organization_stats
+      stats = calculate_organization_stats
     else
       render json: { error: 'No organization found' }, status: :unprocessable_entity
+      return
+    end
+
+    respond_to do |format|
+      format.json { render json: stats }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update("dashboard_stats", 
+            render_to_string(partial: "dashboard/stats", locals: { stats: stats }, formats: [:html])
+          )
+        ]
+      end
     end
   end
 
