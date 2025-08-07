@@ -56,6 +56,31 @@ export const Spinner = ({ size, color }) => (
   <div data-testid="spinner" data-size={size} data-color={color}>Loading...</div>
 );
 
+// Add Navbar components
+export const Navbar = ({ fluid, children }) => (
+  <nav data-testid="navbar" className={fluid ? 'fluid' : ''}>{children}</nav>
+);
+
+Navbar.Brand = ({ href, children }) => (
+  <div data-testid="navbar-brand">
+    <a href={href}>{children}</a>
+  </div>
+);
+
+Navbar.Toggle = () => <button data-testid="navbar-toggle">☰</button>;
+
+Navbar.Collapse = ({ children }) => (
+  <div data-testid="navbar-collapse">{children}</div>
+);
+
+Navbar.Link = ({ href, active, children }) => (
+  <a href={href} data-testid="navbar-link" data-active={active}>{children}</a>
+);
+
+export const Label = ({ htmlFor, children, className }) => (
+  <label htmlFor={htmlFor} className={className} data-testid="label">{children}</label>
+);
+
 export const Table = ({ children, hoverable }) => <table data-testid="table">{children}</table>;
 
 Table.Head = ({ children }) => <thead data-testid="table-head"><tr>{children}</tr></thead>;

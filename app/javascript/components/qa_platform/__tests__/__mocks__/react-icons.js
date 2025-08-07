@@ -28,6 +28,10 @@ export const HiUserGroup = (props) => <svg {...props} data-testid="hi-user-group
 
 // Add more missing icons
 export const HiPlus = (props) => <svg {...props} data-testid="hi-plus" />;
+export const HiLogout = (props) => <svg {...props} data-testid="hi-logout" />;
+export const HiMail = (props) => <svg {...props} data-testid="hi-mail" />;
+export const HiCalendar = (props) => <svg {...props} data-testid="hi-calendar" />;
+export const HiLockClosed = (props) => <svg {...props} data-testid="hi-lock-closed" />;
 
 // This is a mock file, so we need at least one test to prevent Jest errors
 describe('React Icons Mock', () => {
