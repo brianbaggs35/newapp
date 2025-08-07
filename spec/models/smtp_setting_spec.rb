@@ -17,7 +17,7 @@ RSpec.describe SmtpSetting, type: :model do
     it 'requires port to be in valid range' do
       smtp_setting = build(:smtp_setting, port: 0)
       expect(smtp_setting).not_to be_valid
-      
+
       smtp_setting = build(:smtp_setting, port: 70000)
       expect(smtp_setting).not_to be_valid
     end

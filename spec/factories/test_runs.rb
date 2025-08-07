@@ -30,7 +30,7 @@ FactoryBot.define do
         create_list(:test_result, 3, test_run: test_run, organization: test_run.organization, status: 'passed')
         create_list(:test_result, 2, test_run: test_run, organization: test_run.organization, status: 'failed')
         create_list(:test_result, 1, test_run: test_run, organization: test_run.organization, status: 'skipped')
-        
+
         test_run.update!(
           total_tests: test_run.test_results.count,
           passed_tests: test_run.test_results.passed.count,

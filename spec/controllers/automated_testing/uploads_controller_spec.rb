@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe AutomatedTesting::UploadsController, type: :controller do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization: organization, role: 'member') }
-  
+
   before do
     sign_in user
   end
@@ -38,9 +38,9 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
         </testsuite>
       XML
     end
-    
+
     let(:xml_file) do
-      file = Tempfile.new(['test', '.xml'])
+      file = Tempfile.new([ 'test', '.xml' ])
       file.write(valid_xml_content)
       file.rewind
       fixture_file_upload(file.path, 'application/xml')
@@ -72,7 +72,7 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
       it 'returns success response' do
         post :create, params: valid_params
         expect(response).to be_successful
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be true
       end
@@ -97,7 +97,7 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
       it 'returns error response' do
         post :create, params: invalid_params
         expect(response).to have_http_status(:unprocessable_entity)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false
         expect(json_response['errors']).to be_present
@@ -111,11 +111,11 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
     context 'with valid parameters' do
       it 'updates the test run name' do
         patch :update, params: { id: test_run.uuid, name: 'New Name' }
-        
+
         expect(response).to be_successful
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be true
-        
+
         test_run.reload
         expect(test_run.name).to eq('New Name')
       end
@@ -124,11 +124,11 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
     context 'with invalid parameters' do
       it 'does not update the test run' do
         patch :update, params: { id: test_run.uuid, name: '' }
-        
+
         expect(response).to have_http_status(:unprocessable_entity)
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false
-        
+
         test_run.reload
         expect(test_run.name).to eq('Original Name')
       end
@@ -154,7 +154,7 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
 
     it 'returns success response' do
       delete :destroy, params: { id: test_run.uuid }
-      
+
       expect(response).to be_successful
       json_response = JSON.parse(response.body)
       expect(json_response['success']).to be true
@@ -182,7 +182,7 @@ RSpec.describe AutomatedTesting::UploadsController, type: :controller do
 
   context 'when user has no organization' do
     let(:user_without_org) { create(:user, organization: nil, role: 'system_admin') }
-    
+
     before do
       sign_out user
       sign_in user_without_org

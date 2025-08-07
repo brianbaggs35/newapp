@@ -6,11 +6,11 @@ class User < ApplicationRecord
 
   belongs_to :organization, optional: true
   belongs_to :invitation_code, optional: true
-  has_many :created_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'created_by_id'
-  has_many :updated_manual_test_cases, class_name: 'ManualTestCase', foreign_key: 'updated_by_id'
-  has_many :test_executions, foreign_key: 'executed_by_id'
-  has_many :created_test_execution_cycles, class_name: 'TestExecutionCycle', foreign_key: 'created_by_id'
-  has_many :created_invitation_codes, class_name: 'InvitationCode', foreign_key: 'created_by_id'
+  has_many :created_manual_test_cases, class_name: "ManualTestCase", foreign_key: "created_by_id"
+  has_many :updated_manual_test_cases, class_name: "ManualTestCase", foreign_key: "updated_by_id"
+  has_many :test_executions, foreign_key: "executed_by_id"
+  has_many :created_test_execution_cycles, class_name: "TestExecutionCycle", foreign_key: "created_by_id"
+  has_many :created_invitation_codes, class_name: "InvitationCode", foreign_key: "created_by_id"
 
   validates :email, presence: true, uniqueness: true
   validates :role, inclusion: { in: %w[system_admin owner admin member] }
@@ -19,19 +19,19 @@ class User < ApplicationRecord
 
   # Role helper methods based on requirements
   def system_admin?
-    role == 'system_admin'
+    role == "system_admin"
   end
 
   def owner?
-    role == 'owner'
+    role == "owner"
   end
 
   def admin?
-    role == 'admin'
+    role == "admin"
   end
 
   def member?
-    role == 'member'
+    role == "member"
   end
 
   def can_manage_organization?
@@ -59,22 +59,22 @@ class User < ApplicationRecord
   end
 
   def full_name
-    [first_name, last_name].compact.join(' ').presence || email
+    [ first_name, last_name ].compact.join(" ").presence || email
   end
 
   private
 
   def organization_required_for_non_system_admin
     if !system_admin? && organization.nil?
-      errors.add(:organization, 'is required for non-system admin users')
+      errors.add(:organization, "is required for non-system admin users")
     end
   end
 
   def only_one_owner_per_organization
     if owner? && organization.present?
-      existing_owner = organization.users.where(role: 'owner').where.not(id: id).first
+      existing_owner = organization.users.where(role: "owner").where.not(id: id).first
       if existing_owner.present?
-        errors.add(:role, 'organization can only have one owner')
+        errors.add(:role, "organization can only have one owner")
       end
     end
   end

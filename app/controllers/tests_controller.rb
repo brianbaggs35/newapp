@@ -38,7 +38,7 @@ class TestsController < ApplicationController
 
   def destroy
     unless current_user.can_manage_organization?
-      render json: { error: 'Access denied' }, status: :forbidden
+      render json: { error: "Access denied" }, status: :forbidden
       return
     end
 

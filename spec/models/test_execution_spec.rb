@@ -4,7 +4,7 @@ RSpec.describe TestExecution, type: :model do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization: organization) }
   let(:manual_test_case) { create(:manual_test_case, organization: organization, created_by: user) }
-  
+
   describe 'associations' do
     it { should belong_to(:manual_test_case) }
     it { should belong_to(:executed_by).class_name('User') }
@@ -20,7 +20,7 @@ RSpec.describe TestExecution, type: :model do
   describe 'enums' do
     it { should define_enum_for(:status).with_values(
       pending: 'pending',
-      in_progress: 'in_progress', 
+      in_progress: 'in_progress',
       passed: 'passed',
       failed: 'failed',
       blocked: 'blocked'
@@ -125,7 +125,7 @@ RSpec.describe TestExecution, type: :model do
     describe '#screenshots_list' do
       it 'returns array when screenshots_urls is valid JSON' do
         test_execution.update(screenshots_urls: '["url1.jpg", "url2.jpg"]')
-        expect(test_execution.screenshots_list).to eq(['url1.jpg', 'url2.jpg'])
+        expect(test_execution.screenshots_list).to eq([ 'url1.jpg', 'url2.jpg' ])
       end
 
       it 'returns empty array when screenshots_urls is blank' do
@@ -141,7 +141,7 @@ RSpec.describe TestExecution, type: :model do
 
     describe '#screenshots_list=' do
       it 'sets screenshots_urls as JSON' do
-        test_execution.screenshots_list = ['url1.jpg', 'url2.jpg']
+        test_execution.screenshots_list = [ 'url1.jpg', 'url2.jpg' ]
         expect(test_execution.screenshots_urls).to eq('["url1.jpg","url2.jpg"]')
       end
     end
@@ -213,7 +213,7 @@ RSpec.describe TestExecution, type: :model do
 
       it 'returns execution summary hash' do
         summary = test_execution.execution_summary
-        
+
         expect(summary[:test_case_title]).to eq(manual_test_case.title)
         expect(summary[:executor]).to eq(user.email)
         expect(summary[:status]).to eq('passed')

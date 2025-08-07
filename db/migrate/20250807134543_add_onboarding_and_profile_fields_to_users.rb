@@ -5,7 +5,7 @@ class AddOnboardingAndProfileFieldsToUsers < ActiveRecord::Migration[8.0]
     add_column :users, :last_name, :string
     add_column :users, :phone, :string
     add_column :users, :job_title, :string
-    
+
     add_index :users, :onboarding_completed
   end
 end

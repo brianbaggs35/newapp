@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import OrganizationForm from '../organizations/OrganizationForm';
@@ -19,13 +19,15 @@ describe('OrganizationForm Component', () => {
     document.querySelector = jest.fn(() => ({ content: 'mock-csrf-token' }));
   });
 
-  it('renders create organization form', () => {
-    render(<OrganizationForm onSuccess={mockOnSuccess} onCancel={mockOnCancel} />);
+  it('renders create organization form', async () => {
+    await act(async () => {
+      render(<OrganizationForm onSuccess={mockOnSuccess} onCancel={mockOnCancel} />);
+    });
     
-    expect(screen.getByText('Create Organization')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Create Organization' })).toBeInTheDocument();
     expect(screen.getByTestId('text-input')).toBeInTheDocument();
-    expect(screen.getByText('Create')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Create Organization' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 
   it('renders edit organization form when organization is provided', () => {
@@ -39,7 +41,7 @@ describe('OrganizationForm Component', () => {
     render(<OrganizationForm organization={mockOrganization} onSuccess={mockOnSuccess} onCancel={mockOnCancel} />);
     
     expect(screen.getByText('Edit Organization')).toBeInTheDocument();
-    expect(screen.getByText('Update')).toBeInTheDocument();
+    expect(screen.getByText('Update Organization')).toBeInTheDocument();
   });
 
   it('updates form data when inputs change', async () => {
@@ -75,7 +77,7 @@ describe('OrganizationForm Component', () => {
     
     const inputs = screen.getAllByTestId('text-input');
     const nameInput = inputs.find(input => input.name === 'name');
-    const submitButton = screen.getByText('Create');
+    const submitButton = screen.getByRole('button', { name: 'Create Organization' });
     
     await user.type(nameInput, 'New Organization');
     await user.click(submitButton);

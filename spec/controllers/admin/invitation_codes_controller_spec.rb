@@ -42,7 +42,7 @@ RSpec.describe Admin::InvitationCodesController, type: :controller do
       it 'returns success response' do
         post :create, params: valid_params, format: :json
         expect(response).to have_http_status(:success)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be true
         expect(json_response['invitation_code']['code']).to be_present
@@ -74,7 +74,7 @@ RSpec.describe Admin::InvitationCodesController, type: :controller do
       it 'returns error response' do
         post :create, params: invalid_params, format: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false
         expect(json_response['errors']).to be_present
@@ -94,7 +94,7 @@ RSpec.describe Admin::InvitationCodesController, type: :controller do
     it 'returns success response' do
       delete :destroy, params: { id: invitation_code.id }, format: :json
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['success']).to be true
     end

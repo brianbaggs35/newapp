@@ -23,12 +23,12 @@ RSpec.describe XmlParserService, type: :service do
           </testsuite>
         XML
       end
-      
+
       let(:file_path) { write_temp_file(junit_xml) }
 
       it 'creates a test run with correct data' do
         expect { service.parse_and_create_test_run }.to change(TestRun, :count).by(1)
-        
+
         test_run = TestRun.last
         expect(test_run.name).to eq('SampleTestSuite')
         expect(test_run.organization).to eq(organization)
@@ -43,20 +43,20 @@ RSpec.describe XmlParserService, type: :service do
 
       it 'creates test results with correct data' do
         service.parse_and_create_test_run
-        
+
         test_run = TestRun.last
         expect(test_run.test_results.count).to eq(3)
-        
+
         passed_result = test_run.test_results.find_by(test_name: 'testPassed')
         expect(passed_result.status).to eq('passed')
         expect(passed_result.class_name).to eq('com.example.TestClass')
         expect(passed_result.duration).to eq(10.5)
-        
+
         failed_result = test_run.test_results.find_by(test_name: 'testFailed')
         expect(failed_result.status).to eq('failed')
         expect(failed_result.failure_message).to include('Stack trace here')
         expect(failed_result.error_type).to eq('AssertionError')
-        
+
         skipped_result = test_run.test_results.find_by(test_name: 'testSkipped')
         expect(skipped_result.status).to eq('skipped')
       end
@@ -83,12 +83,12 @@ RSpec.describe XmlParserService, type: :service do
           </suite>
         XML
       end
-      
+
       let(:file_path) { write_temp_file(testng_xml) }
 
       it 'creates a test run with correct data' do
         expect { service.parse_and_create_test_run }.to change(TestRun, :count).by(1)
-        
+
         test_run = TestRun.last
         expect(test_run.name).to eq('TestNG Suite')
         expect(test_run.total_tests).to eq(2)
@@ -120,7 +120,7 @@ RSpec.describe XmlParserService, type: :service do
           </custom-format>
         XML
       end
-      
+
       let(:file_path) { write_temp_file(unsupported_xml) }
 
       it 'returns nil and logs error' do
@@ -135,7 +135,7 @@ RSpec.describe XmlParserService, type: :service do
   private
 
   def write_temp_file(content)
-    file = Tempfile.new(['test', '.xml'])
+    file = Tempfile.new([ 'test', '.xml' ])
     file.write(content)
     file.close
     file.path

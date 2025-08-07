@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import UserManagement from '../UserManagement';
@@ -14,24 +14,40 @@ describe('UserManagement Component', () => {
     document.querySelector = jest.fn(() => ({ content: 'mock-csrf-token' }));
   });
 
-  it('renders user management page with loading spinner initially', () => {
-    fetch.mockResolvedValueOnce({
+  it('renders user management page with loading spinner initially', async () => {
+    // Create a promise that doesn't resolve immediately
+    let resolvePromise;
+    const promise = new Promise((resolve) => {
+      resolvePromise = resolve;
+    });
+
+    fetch.mockReturnValueOnce({
       ok: true,
-      json: () => Promise.resolve([])
+      json: () => promise
     });
 
     render(<UserManagement />);
     
+    // Check that spinner is shown initially
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    
+    // Now resolve the promise to clean up
+    resolvePromise([]);
+    
+    await waitFor(async () => {
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
   });
 
-  it('renders user management title', () => {
+  it('renders user management title', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve([])
     });
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
     expect(screen.getByText('User Management')).toBeInTheDocument();
   });
@@ -42,9 +58,11 @@ describe('UserManagement Component', () => {
       json: () => Promise.resolve([])
     });
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
@@ -72,9 +90,11 @@ describe('UserManagement Component', () => {
       json: () => Promise.resolve(mockUsers)
     });
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
@@ -90,14 +110,19 @@ describe('UserManagement Component', () => {
       json: () => Promise.resolve([])
     });
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
     const addButton = screen.getByText('Add User');
-    await user.click(addButton);
+    
+    await act(async () => {
+      await user.click(addButton);
+    });
 
     expect(screen.getByTestId('modal')).toBeInTheDocument();
   });
@@ -105,9 +130,11 @@ describe('UserManagement Component', () => {
   it('handles fetch error gracefully', async () => {
     fetch.mockRejectedValueOnce(new Error('Network error'));
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
@@ -120,15 +147,18 @@ describe('UserManagement Component', () => {
       json: () => Promise.resolve([])
     });
 
-    render(<UserManagement />);
+    await act(async () => {
+      render(<UserManagement />);
+    });
     
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText('Email')).toBeInTheDocument();
+    expect(screen.getByText('User')).toBeInTheDocument();
+    expect(screen.getByText('Status')).toBeInTheDocument();
     expect(screen.getByText('Role')).toBeInTheDocument();
-    expect(screen.getByText('Created')).toBeInTheDocument();
+    expect(screen.getByText('Joined')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
   });
 });

@@ -1,13 +1,13 @@
 class TestExecutionCycle < ApplicationRecord
   belongs_to :organization
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: "User"
   has_many :test_executions, dependent: :destroy
   has_many :manual_test_cases, through: :test_executions
 
   validates :name, presence: true, length: { minimum: 3, maximum: 255 }
   validates :status, inclusion: { in: %w[planned active completed archived] }
 
-  enum :status, { planned: 'planned', active: 'active', completed: 'completed', archived: 'archived' }
+  enum :status, { planned: "planned", active: "active", completed: "completed", archived: "archived" }
 
   scope :recent, -> { order(created_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
@@ -15,7 +15,7 @@ class TestExecutionCycle < ApplicationRecord
   scope :current, -> { where(status: %w[planned active]) }
 
   def total_test_cases
-    test_executions.joins(:manual_test_case).distinct.count('manual_test_cases.id')
+    test_executions.joins(:manual_test_case).distinct.count("manual_test_cases.id")
   end
 
   def total_executions

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ManualTestCase, type: :model do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization: organization) }
-  
+
   describe 'associations' do
     it { should belong_to(:organization) }
     it { should belong_to(:created_by).class_name('User') }
@@ -72,7 +72,7 @@ RSpec.describe ManualTestCase, type: :model do
 
     describe '#tags_array' do
       it 'returns array of tags' do
-        expect(manual_test_case.tags_array).to eq(['login', 'auth', 'security'])
+        expect(manual_test_case.tags_array).to eq([ 'login', 'auth', 'security' ])
       end
 
       it 'returns empty array when tags is blank' do
@@ -83,7 +83,7 @@ RSpec.describe ManualTestCase, type: :model do
 
     describe '#tags_array=' do
       it 'sets tags from array' do
-        manual_test_case.tags_array = ['new', 'tags']
+        manual_test_case.tags_array = [ 'new', 'tags' ]
         expect(manual_test_case.tags).to eq('new, tags')
       end
     end

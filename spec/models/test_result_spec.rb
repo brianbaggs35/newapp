@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TestResult, type: :model do
   let(:organization) { create(:organization) }
   let(:test_run) { create(:test_run, organization: organization) }
-  
+
   describe 'associations' do
     it { should belong_to(:test_run) }
     it { should belong_to(:organization) }
@@ -45,7 +45,7 @@ RSpec.describe TestResult, type: :model do
 
   describe 'methods' do
     let(:test_result) { create(:test_result, test_run: test_run, organization: organization, duration: 2.5) }
-    
+
     it 'converts duration to milliseconds' do
       expect(test_result.duration_ms).to eq(2500)
     end
@@ -57,7 +57,7 @@ RSpec.describe TestResult, type: :model do
 
     context 'with failure' do
       let(:failed_result) { create(:test_result, test_run: test_run, organization: organization, status: 'failed', failure_message: 'Test failed') }
-      
+
       it 'returns true for has_failure?' do
         expect(failed_result.has_failure?).to be true
       end
@@ -65,7 +65,7 @@ RSpec.describe TestResult, type: :model do
 
     context 'without failure' do
       let(:passed_result) { create(:test_result, test_run: test_run, organization: organization, status: 'passed') }
-      
+
       it 'returns false for has_failure?' do
         expect(passed_result.has_failure?).to be false
       end
@@ -73,7 +73,7 @@ RSpec.describe TestResult, type: :model do
 
     context 'with error' do
       let(:error_result) { create(:test_result, test_run: test_run, organization: organization, error_type: 'RuntimeError') }
-      
+
       it 'returns true for has_error?' do
         expect(error_result.has_error?).to be true
       end
@@ -81,7 +81,7 @@ RSpec.describe TestResult, type: :model do
 
     context 'without error' do
       let(:clean_result) { create(:test_result, test_run: test_run, organization: organization) }
-      
+
       it 'returns false for has_error?' do
         expect(clean_result.has_error?).to be false
       end

@@ -1,8 +1,8 @@
 class ManualTestCase < ApplicationRecord
   belongs_to :organization
   belongs_to :test_suite, optional: true
-  belongs_to :created_by, class_name: 'User'
-  belongs_to :updated_by, class_name: 'User', optional: true
+  belongs_to :created_by, class_name: "User"
+  belongs_to :updated_by, class_name: "User", optional: true
   has_many :test_executions, dependent: :destroy
   has_many :executors, through: :test_executions, source: :executed_by
 
@@ -17,8 +17,8 @@ class ManualTestCase < ApplicationRecord
   validates :environment, length: { maximum: 100 }
   validates :account, length: { maximum: 100 }
 
-  enum :priority, { critical: 'critical', high: 'high', medium: 'medium', low: 'low' }
-  enum :status, { draft: 'draft', review: 'review', approved: 'approved', deprecated: 'deprecated' }
+  enum :priority, { critical: "critical", high: "high", medium: "medium", low: "low" }
+  enum :status, { draft: "draft", review: "review", approved: "approved", deprecated: "deprecated" }
 
   scope :by_priority, ->(priority) { where(priority: priority) }
   scope :by_status, ->(status) { where(status: status) }
@@ -30,11 +30,11 @@ class ManualTestCase < ApplicationRecord
 
   def tags_array
     return [] if tags.blank?
-    tags.split(',').map(&:strip).reject(&:blank?)
+    tags.split(",").map(&:strip).reject(&:blank?)
   end
 
   def tags_array=(tag_list)
-    self.tags = tag_list.join(', ') if tag_list.is_a?(Array)
+    self.tags = tag_list.join(", ") if tag_list.is_a?(Array)
   end
 
   def latest_execution

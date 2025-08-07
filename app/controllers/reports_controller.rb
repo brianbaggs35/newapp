@@ -5,13 +5,13 @@ class ReportsController < ApplicationController
 
   def test_execution
     case params[:report_type]
-    when 'summary'
+    when "summary"
       render json: summary_report
-    when 'detailed'
+    when "detailed"
       render json: detailed_report
-    when 'trends'
+    when "trends"
       render json: trends_report
-    when 'defects'
+    when "defects"
       render json: defects_report
     else
       render json: summary_report
@@ -19,16 +19,16 @@ class ReportsController < ApplicationController
   end
 
   def export
-    format = params[:format] || 'pdf'
-    report_type = params[:report_type] || 'summary'
-    
+    format = params[:format] || "pdf"
+    report_type = params[:report_type] || "summary"
+
     case format
-    when 'pdf'
+    when "pdf"
       export_pdf(report_type)
-    when 'csv'
+    when "csv"
       export_csv(report_type)
     else
-      render json: { error: 'Unsupported format' }, status: :unprocessable_entity
+      render json: { error: "Unsupported format" }, status: :unprocessable_entity
     end
   end
 
@@ -45,7 +45,7 @@ class ReportsController < ApplicationController
 
   def summary_report
     executions = @organization.test_executions.in_date_range(@start_date, @end_date)
-    
+
     {
       summary: {
         total_test_cases: @organization.manual_test_cases.count,
@@ -92,7 +92,7 @@ class ReportsController < ApplicationController
 
   def trends_report
     executions = @organization.test_executions.in_date_range(@start_date, @end_date)
-    
+
     {
       execution_trends: generate_execution_trends(executions),
       defect_trends: generate_defect_trends(executions),
@@ -111,15 +111,15 @@ class ReportsController < ApplicationController
       total_defects: executions_with_defects.count,
       defects_by_priority: executions_with_defects
                            .joins(:manual_test_case)
-                           .group('manual_test_cases.priority')
+                           .group("manual_test_cases.priority")
                            .count,
       defects_by_category: executions_with_defects
                            .joins(:manual_test_case)
-                           .group('manual_test_cases.category')
+                           .group("manual_test_cases.category")
                            .count,
       defects_by_executor: executions_with_defects
                            .joins(:executed_by)
-                           .group('users.email')
+                           .group("users.email")
                            .count,
       defect_details: executions_with_defects.map do |execution|
         {
@@ -141,21 +141,21 @@ class ReportsController < ApplicationController
     send_data(
       "PDF content for #{report_type} report",
       filename: "test-report-#{report_type}-#{Date.current}.pdf",
-      type: 'application/pdf',
-      disposition: 'attachment'
+      type: "application/pdf",
+      disposition: "attachment"
     )
   end
 
   def export_csv(report_type)
-    require 'csv'
-    
+    require "csv"
+
     csv_data = generate_csv_data(report_type)
-    
+
     send_data(
       csv_data,
       filename: "test-report-#{report_type}-#{Date.current}.csv",
-      type: 'text/csv',
-      disposition: 'attachment'
+      type: "text/csv",
+      disposition: "attachment"
     )
   end
 
@@ -166,8 +166,8 @@ class ReportsController < ApplicationController
 
     CSV.generate(headers: true) do |csv|
       csv << [
-        'Test Case Title', 'Category', 'Priority', 'Executor',
-        'Status', 'Execution Time (min)', 'Executed At', 'Defect ID', 'Notes'
+        "Test Case Title", "Category", "Priority", "Executor",
+        "Status", "Execution Time (min)", "Executed At", "Defect ID", "Notes"
       ]
 
       executions.each do |execution|
@@ -189,8 +189,8 @@ class ReportsController < ApplicationController
   def calculate_test_coverage(executions)
     total_test_cases = @organization.manual_test_cases.approved.count
     return 0 if total_test_cases == 0
-    
-    executed_test_cases = executions.joins(:manual_test_case).distinct.count('manual_test_cases.id')
+
+    executed_test_cases = executions.joins(:manual_test_case).distinct.count("manual_test_cases.id")
     (executed_test_cases.to_f / total_test_cases * 100).round(2)
   end
 
@@ -203,29 +203,29 @@ class ReportsController < ApplicationController
   def generate_trends_data(executions)
     # Group executions by week for the last 4 weeks
     weeks = 4.times.map { |i| (i + 1).weeks.ago.beginning_of_week }
-    
+
     execution_trends = {
       labels: weeks.map { |week| "Week #{weeks.index(week) + 1}" },
       datasets: [
         {
-          label: 'Passed',
+          label: "Passed",
           data: weeks.map { |week| executions.passed.where(executed_at: week..week.end_of_week).count },
-          backgroundColor: 'rgba(34, 197, 94, 0.8)',
-          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: "rgba(34, 197, 94, 0.8)",
+          borderColor: "rgb(34, 197, 94)",
           borderWidth: 1
         },
         {
-          label: 'Failed',
+          label: "Failed",
           data: weeks.map { |week| executions.failed.where(executed_at: week..week.end_of_week).count },
-          backgroundColor: 'rgba(239, 68, 68, 0.8)',
-          borderColor: 'rgb(239, 68, 68)',
+          backgroundColor: "rgba(239, 68, 68, 0.8)",
+          borderColor: "rgb(239, 68, 68)",
           borderWidth: 1
         },
         {
-          label: 'Blocked',
+          label: "Blocked",
           data: weeks.map { |week| executions.blocked.where(executed_at: week..week.end_of_week).count },
-          backgroundColor: 'rgba(245, 158, 11, 0.8)',
-          borderColor: 'rgb(245, 158, 11)',
+          backgroundColor: "rgba(245, 158, 11, 0.8)",
+          borderColor: "rgb(245, 158, 11)",
           borderWidth: 1
         }
       ]
@@ -235,10 +235,10 @@ class ReportsController < ApplicationController
       labels: weeks.map { |week| "Week #{weeks.index(week) + 1}" },
       datasets: [
         {
-          label: 'Defects Found',
+          label: "Defects Found",
           data: weeks.map { |week| executions.where.not(defect_id: nil).where(executed_at: week..week.end_of_week).count },
-          borderColor: 'rgb(239, 68, 68)',
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          borderColor: "rgb(239, 68, 68)",
+          backgroundColor: "rgba(239, 68, 68, 0.1)",
           tension: 0.1
         }
       ]
@@ -258,27 +258,27 @@ class ReportsController < ApplicationController
 
     {
       status_distribution: {
-        labels: ['Passed', 'Failed', 'Blocked'],
-        datasets: [{
-          data: [status_counts[2], status_counts[3], status_counts[4]], # passed, failed, blocked
+        labels: [ "Passed", "Failed", "Blocked" ],
+        datasets: [ {
+          data: [ status_counts[2], status_counts[3], status_counts[4] ], # passed, failed, blocked
           backgroundColor: [
-            'rgba(34, 197, 94, 0.8)',
-            'rgba(239, 68, 68, 0.8)',
-            'rgba(245, 158, 11, 0.8)'
+            "rgba(34, 197, 94, 0.8)",
+            "rgba(239, 68, 68, 0.8)",
+            "rgba(245, 158, 11, 0.8)"
           ]
-        }]
+        } ]
       },
       priority_distribution: {
-        labels: ['Critical', 'High', 'Medium', 'Low'],
-        datasets: [{
+        labels: [ "Critical", "High", "Medium", "Low" ],
+        datasets: [ {
           data: priority_counts,
           backgroundColor: [
-            'rgba(239, 68, 68, 0.8)',
-            'rgba(245, 158, 11, 0.8)',
-            'rgba(59, 130, 246, 0.8)',
-            'rgba(107, 114, 128, 0.8)'
+            "rgba(239, 68, 68, 0.8)",
+            "rgba(245, 158, 11, 0.8)",
+            "rgba(59, 130, 246, 0.8)",
+            "rgba(107, 114, 128, 0.8)"
           ]
-        }]
+        } ]
       }
     }
   end
@@ -286,13 +286,13 @@ class ReportsController < ApplicationController
   def generate_top_failed_tests
     @organization.manual_test_cases
                  .joins(:test_executions)
-                 .where(test_executions: { status: ['failed', 'blocked'], executed_at: @start_date..@end_date })
-                 .group('manual_test_cases.id')
-                 .having('COUNT(test_executions.id) > 0')
-                 .order('COUNT(test_executions.id) DESC')
+                 .where(test_executions: { status: [ "failed", "blocked" ], executed_at: @start_date..@end_date })
+                 .group("manual_test_cases.id")
+                 .having("COUNT(test_executions.id) > 0")
+                 .order("COUNT(test_executions.id) DESC")
                  .limit(5)
                  .map do |test_case|
-      failed_count = test_case.test_executions.where(status: ['failed', 'blocked']).count
+      failed_count = test_case.test_executions.where(status: [ "failed", "blocked" ]).count
       total_count = test_case.test_executions.count
       failure_rate = total_count > 0 ? (failed_count.to_f / total_count * 100).round(1) : 0
 
@@ -301,8 +301,8 @@ class ReportsController < ApplicationController
         title: test_case.title,
         category: test_case.category,
         failure_rate: failure_rate,
-        last_failed: test_case.test_executions.where(status: ['failed', 'blocked']).maximum(:executed_at),
-        defect_id: test_case.test_executions.where.not(defect_id: nil).last&.defect_id || 'N/A'
+        last_failed: test_case.test_executions.where(status: [ "failed", "blocked" ]).maximum(:executed_at),
+        defect_id: test_case.test_executions.where.not(defect_id: nil).last&.defect_id || "N/A"
       }
     end
   end
@@ -311,7 +311,7 @@ class ReportsController < ApplicationController
     @organization.users
                  .joins(:test_executions)
                  .where(test_executions: { executed_at: @start_date..@end_date })
-                 .group('users.id')
+                 .group("users.id")
                  .map do |user|
       user_executions = executions.where(executed_by: user)
       total_executions = user_executions.count
@@ -320,7 +320,7 @@ class ReportsController < ApplicationController
       efficiency = total_executions > 0 ? (passed_executions.to_f / total_executions * 100).round(1) : 0
 
       {
-        name: user.email.split('@').first.humanize,
+        name: user.email.split("@").first.humanize,
         email: user.email,
         total_executions: total_executions,
         passed_executions: passed_executions,

@@ -17,7 +17,7 @@ class SmtpSetting < ApplicationRecord
   end
 
   def masked_password
-    return '' if password.blank?
-    '*' * 8
+    return "" if password.blank?
+    "*" * 8
   end
 end

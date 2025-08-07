@@ -11,7 +11,7 @@ class CreateInvitationCodes < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :invitation_codes, [:code_type, :expires_at]
-    add_index :invitation_codes, [:uses_count, :max_uses]
+    add_index :invitation_codes, [ :code_type, :expires_at ]
+    add_index :invitation_codes, [ :uses_count, :max_uses ]
   end
 end

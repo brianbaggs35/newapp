@@ -61,7 +61,7 @@ RSpec.describe OnboardingController, type: :controller do
       it 'returns success response' do
         patch :update_organization, params: organization_params, format: :json
         expect(response).to have_http_status(:success)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be true
         expect(json_response['next_step']).to eq('profile')
@@ -76,7 +76,7 @@ RSpec.describe OnboardingController, type: :controller do
 
       it 'updates existing organization' do
         patch :update_organization, params: organization_params, format: :json
-        
+
         existing_org.reload
         expect(existing_org.name).to eq('Test Organization')
       end
@@ -95,7 +95,7 @@ RSpec.describe OnboardingController, type: :controller do
       it 'returns error response' do
         patch :update_organization, params: invalid_params, format: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false
         expect(json_response['errors']).to be_present
@@ -117,7 +117,7 @@ RSpec.describe OnboardingController, type: :controller do
 
     it 'updates user profile' do
       patch :update_profile, params: profile_params, format: :json
-      
+
       user.reload
       expect(user.first_name).to eq('John')
       expect(user.last_name).to eq('Doe')
@@ -128,7 +128,7 @@ RSpec.describe OnboardingController, type: :controller do
     it 'returns success response' do
       patch :update_profile, params: profile_params, format: :json
       expect(response).to have_http_status(:success)
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response['success']).to be true
       expect(json_response['next_step']).to eq('team')
@@ -153,7 +153,7 @@ RSpec.describe OnboardingController, type: :controller do
   describe 'POST #complete' do
     it 'marks onboarding as completed' do
       post :complete
-      
+
       user.reload
       expect(user.onboarding_completed?).to be true
     end

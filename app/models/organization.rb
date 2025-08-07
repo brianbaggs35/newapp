@@ -12,23 +12,23 @@ class Organization < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   def owner
-    users.find_by(role: 'owner')
+    users.find_by(role: "owner")
   end
 
   def admins
-    users.where(role: 'admin')
+    users.where(role: "admin")
   end
 
   def managers
-    users.where(role: ['owner', 'admin'])
+    users.where(role: [ "owner", "admin" ])
   end
 
   def members
-    users.where(role: 'member')
+    users.where(role: "member")
   end
 
   def all_users
-    users.where(role: ['owner', 'admin', 'member'])
+    users.where(role: [ "owner", "admin", "member" ])
   end
 
   def deactivate!

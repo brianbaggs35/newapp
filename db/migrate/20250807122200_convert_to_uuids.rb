@@ -8,7 +8,7 @@ class ConvertToUuids < ActiveRecord::Migration[8.0]
     add_column :manual_test_cases, :uuid, :uuid, default: "gen_random_uuid()", null: false
     add_column :test_executions, :uuid, :uuid, default: "gen_random_uuid()", null: false
     add_column :test_execution_cycles, :uuid, :uuid, default: "gen_random_uuid()", null: false
-    
+
     # Add UUID indexes
     add_index :users, :uuid, unique: true
     add_index :organizations, :uuid, unique: true

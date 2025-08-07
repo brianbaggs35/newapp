@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import LoginForm from '../auth/LoginForm';
@@ -18,7 +18,8 @@ describe('LoginForm Component', () => {
     render(<LoginForm />);
     
     expect(screen.getByText('Sign In')).toBeInTheDocument();
-    expect(screen.getByTestId('text-input')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('name@company.com')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
   });
 
   it('renders remember me checkbox', () => {
@@ -45,10 +46,13 @@ describe('LoginForm Component', () => {
   it('shows loading state when form is submitted', async () => {
     const user = userEvent.setup();
     
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ success: true })
+    // Create a promise that doesn't resolve immediately
+    let resolvePromise;
+    const promise = new Promise((resolve) => {
+      resolvePromise = resolve;
     });
+    
+    fetch.mockReturnValueOnce(promise);
     
     render(<LoginForm />);
     
@@ -59,9 +63,21 @@ describe('LoginForm Component', () => {
     
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
-    await user.click(submitButton);
     
+    await act(async () => {
+      await user.click(submitButton);
+    });
+    
+    // Check that button is disabled during loading
     expect(submitButton).toBeDisabled();
+    expect(submitButton).toHaveTextContent('Signing in...');
+    
+    // Clean up by resolving the promise
+    resolvePromise({ ok: true });
+    
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled();
+    });
   });
 
   it('renders forgot password link', () => {

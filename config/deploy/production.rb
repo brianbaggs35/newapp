@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "your-production-server.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
+server "your-production-server.com", user: "deploy", roles: %w[app db web], my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
@@ -35,9 +35,9 @@ server "your-production-server.com", user: "deploy", roles: %w{app db web}, my_p
 # Global options
 # --------------
 set :ssh_options, {
-  keys: %w(/home/deploy/.ssh/id_rsa),
+  keys: %w[/home/deploy/.ssh/id_rsa],
   forward_agent: false,
-  auth_methods: %w(publickey password)
+  auth_methods: %w[publickey password]
   # password: "please use keys"
 }
 
