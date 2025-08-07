@@ -32,6 +32,7 @@ export const HiLogout = (props) => <svg {...props} data-testid="hi-logout" />;
 export const HiMail = (props) => <svg {...props} data-testid="hi-mail" />;
 export const HiCalendar = (props) => <svg {...props} data-testid="hi-calendar" />;
 export const HiLockClosed = (props) => <svg {...props} data-testid="hi-lock-closed" />;
+export const HiChevronDown = (props) => <svg {...props} data-testid="hi-chevron-down" />;
 
 // This is a mock file, so we need at least one test to prevent Jest errors
 describe('React Icons Mock', () => {

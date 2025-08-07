@@ -81,6 +81,29 @@ export const Label = ({ htmlFor, children, className }) => (
   <label htmlFor={htmlFor} className={className} data-testid="label">{children}</label>
 );
 
+export const Textarea = ({ value, onChange, placeholder, rows, className, ...props }) => (
+  <textarea 
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    rows={rows}
+    className={className}
+    data-testid="textarea"
+    {...props}
+  />
+);
+
+export const Checkbox = ({ checked, onChange, className, ...props }) => (
+  <input
+    type="checkbox"
+    checked={checked}
+    onChange={onChange}
+    className={className}
+    data-testid="checkbox"
+    {...props}
+  />
+);
+
 export const Table = ({ children, hoverable }) => <table data-testid="table">{children}</table>;
 
 Table.Head = ({ children }) => <thead data-testid="table-head"><tr>{children}</tr></thead>;
@@ -124,6 +147,21 @@ export const Progress = ({ progress }) => (
     <div style={{ width: `${progress}%` }} />
   </div>
 );
+
+export const Dropdown = ({ label, children, ...props }) => (
+  <div data-testid="dropdown" {...props}>
+    <div data-testid="dropdown-label">{label}</div>
+    <div data-testid="dropdown-menu">{children}</div>
+  </div>
+);
+
+Dropdown.Item = ({ href, onClick, children }) => (
+  <div data-testid="dropdown-item" onClick={onClick}>
+    {href ? <a href={href}>{children}</a> : children}
+  </div>
+);
+
+Dropdown.Divider = () => <div data-testid="dropdown-divider" />;
 
 // Add a test to prevent Jest from treating this as an empty test suite
 describe('Flowbite React Mock', () => {
