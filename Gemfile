@@ -73,8 +73,8 @@ group :test do
   gem "simplecov", require: false
   gem "simplecov-lcov", require: false
   gem "capybara", "~> 3.40"
-  gem "selenium-webdriver", "~> 4.25"
-  gem "webdrivers", "~> 5.3"
+  gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 # XML parsing for JUnit files
@@ -84,8 +84,7 @@ gem "nokogiri"
 gem "apartment"
 gem "acts_as_tenant"
 
-# File upload and processing
-gem "image_processing"
+# File upload and processing (already specified above with version constraint)
 
 # PDF generation for reports
 gem "wicked_pdf"

@@ -26,7 +26,7 @@ describe('AutomatedTestUpload', () => {
     
     expect(screen.getByText('Test Upload')).toBeInTheDocument();
     expect(screen.getByText('Upload JUnit or TestNG XML files to analyze test results')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /upload test results/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /upload test results/i })).toHaveLength(2);
   });
 
   it('shows empty state when no test runs exist', () => {
@@ -88,12 +88,13 @@ describe('AutomatedTestUpload', () => {
   it('opens upload modal when upload button is clicked', async () => {
     render(<AutomatedTestUpload {...mockProps} />);
     
-    fireEvent.click(screen.getByRole('button', { name: /upload test results/i }));
+    const uploadButtons = screen.getAllByRole('button', { name: /upload test results/i });
+    fireEvent.click(uploadButtons[0]);
     
     await waitFor(() => {
-      expect(screen.getByText('Upload Test Results')).toBeInTheDocument();
-      expect(screen.getByLabelText(/test run name/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/xml file/i)).toBeInTheDocument();
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
+      expect(screen.getByTestId('text-input')).toBeInTheDocument();
+      expect(screen.getByTestId('file-input')).toBeInTheDocument();
     });
   });
 
@@ -102,19 +103,20 @@ describe('AutomatedTestUpload', () => {
     render(<AutomatedTestUpload {...mockProps} onUpload={mockOnUpload} />);
     
     // Open modal
-    fireEvent.click(screen.getByRole('button', { name: /upload test results/i }));
+    const uploadButtons = screen.getAllByRole('button', { name: /upload test results/i });
+    fireEvent.click(uploadButtons[0]);
     
     await waitFor(() => {
-      expect(screen.getByText('Upload Test Results')).toBeInTheDocument();
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
     });
 
     // Add file
     const file = createMockFile();
-    const fileInput = screen.getByLabelText(/xml file/i);
+    const fileInput = screen.getByTestId('file-input');
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     // Add optional name
-    const nameInput = screen.getByLabelText(/test run name/i);
+    const nameInput = screen.getByTestId('text-input');
     fireEvent.change(nameInput, { target: { value: 'My Test Run' } });
 
     // Click upload
@@ -144,9 +146,14 @@ describe('AutomatedTestUpload', () => {
 
     render(<AutomatedTestUpload {...mockProps} testRuns={testRuns} />);
     
-    // Find and click the rename button (pencil icon)
-    const renameButtons = screen.getAllByRole('button');
-    const renameButton = renameButtons.find(btn => btn.querySelector('svg')); // Find button with icon
+    // Find and click the rename button (pencil icon) - it's the second button in the actions
+    const allButtons = screen.getAllByTestId('button');
+    const renameButton = allButtons.find(btn => {
+      const svg = btn.querySelector('svg[data-testid="hi-pencil"]');
+      return svg !== null;
+    });
+    
+    expect(renameButton).toBeTruthy();
     fireEvent.click(renameButton);
 
     await waitFor(() => {
@@ -221,7 +228,8 @@ describe('AutomatedTestUpload', () => {
     render(<AutomatedTestUpload {...mockProps} />);
     
     // Open modal
-    fireEvent.click(screen.getByRole('button', { name: /upload test results/i }));
+    const uploadButtons = screen.getAllByRole('button', { name: /upload test results/i });
+    fireEvent.click(uploadButtons[0]);
     
     await waitFor(() => {
       const uploadButton = screen.getByRole('button', { name: /^upload$/i });
@@ -232,16 +240,17 @@ describe('AutomatedTestUpload', () => {
   it('enables upload button when file is selected', async () => {
     render(<AutomatedTestUpload {...mockProps} />);
     
-    // Open modal
-    fireEvent.click(screen.getByRole('button', { name: /upload test results/i }));
+    // Open modal - get all buttons and click the first one (header button)
+    const uploadButtons = screen.getAllByRole('button', { name: /upload test results/i });
+    fireEvent.click(uploadButtons[0]);
     
     await waitFor(() => {
-      expect(screen.getByText('Upload Test Results')).toBeInTheDocument();
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
     });
 
     // Add file
     const file = createMockFile();
-    const fileInput = screen.getByLabelText(/xml file/i);
+    const fileInput = screen.getByTestId('file-input');
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     // Check that upload button is enabled

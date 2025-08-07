@@ -23,7 +23,9 @@ Sidebar.Collapse = ({ label, children, open, icon: Icon }) => (
   </div>
 );
 
-export const Card = ({ children }) => <div data-testid="card">{children}</div>;
+export const Card = ({ children, onClick, className }) => (
+  <div data-testid="card" className={className} onClick={onClick}>{children}</div>
+);
 
 export const Button = ({ onClick, children, className, disabled, size, color, href, ...props }) => {
   if (href) {
@@ -46,9 +48,17 @@ export const Badge = ({ color, children }) => (
   <span data-testid="badge" data-color={color}>{children}</span>
 );
 
+export const Alert = ({ color, children, className }) => (
+  <div data-testid="alert" data-color={color} className={className}>{children}</div>
+);
+
+export const Spinner = ({ size, color }) => (
+  <div data-testid="spinner" data-size={size} data-color={color}>Loading...</div>
+);
+
 export const Table = ({ children, hoverable }) => <table data-testid="table">{children}</table>;
 
-Table.Head = ({ children }) => <thead data-testid="table-head">{children}</thead>;
+Table.Head = ({ children }) => <thead data-testid="table-head"><tr>{children}</tr></thead>;
 Table.HeadCell = ({ children }) => <th data-testid="table-head-cell">{children}</th>;
 Table.Body = ({ children }) => <tbody data-testid="table-body">{children}</tbody>;
 Table.Row = ({ children, className }) => <tr className={className} data-testid="table-row">{children}</tr>;
@@ -61,9 +71,10 @@ Modal.Header = ({ children }) => <div data-testid="modal-header">{children}</div
 Modal.Body = ({ children }) => <div data-testid="modal-body">{children}</div>;
 Modal.Footer = ({ children }) => <div data-testid="modal-footer">{children}</div>;
 
-export const TextInput = ({ placeholder, value, onChange, ...props }) => (
+export const TextInput = ({ placeholder, value, onChange, id, ...props }) => (
   <input
     type="text"
+    id={id}
     placeholder={placeholder}
     value={value}
     onChange={onChange}
@@ -72,9 +83,10 @@ export const TextInput = ({ placeholder, value, onChange, ...props }) => (
   />
 );
 
-export const FileInput = ({ accept, onChange, ...props }) => (
+export const FileInput = ({ accept, onChange, id, ...props }) => (
   <input
     type="file"
+    id={id}
     accept={accept}
     onChange={onChange}
     data-testid="file-input"

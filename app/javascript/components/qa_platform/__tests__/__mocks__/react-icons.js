@@ -17,6 +17,18 @@ export const HiTrash = (props) => <svg {...props} data-testid="hi-trash" />;
 export const HiPencil = (props) => <svg {...props} data-testid="hi-pencil" />;
 export const HiEye = (props) => <svg {...props} data-testid="hi-eye" />;
 
+// Add missing icons used by MultiTenantDashboard
+export const HiOfficeBuilding = (props) => <svg {...props} data-testid="hi-office-building" />;
+export const HiClipboardList = (props) => <svg {...props} data-testid="hi-clipboard-list" />;
+export const HiCheckCircle = (props) => <svg {...props} data-testid="hi-check-circle" />;
+export const HiXCircle = (props) => <svg {...props} data-testid="hi-x-circle" />;
+export const HiClock = (props) => <svg {...props} data-testid="hi-clock" />;
+export const HiTrendingUp = (props) => <svg {...props} data-testid="hi-trending-up" />;
+export const HiUserGroup = (props) => <svg {...props} data-testid="hi-user-group" />;
+
+// Add more missing icons
+export const HiPlus = (props) => <svg {...props} data-testid="hi-plus" />;
+
 // This is a mock file, so we need at least one test to prevent Jest errors
 describe('React Icons Mock', () => {
   it('exports all required icon components', () => {
