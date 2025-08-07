@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :organization do
-    name { "MyString" }
-    description { "MyText" }
-    active { false }
+    sequence(:name) { |n| "Test Organization #{n}" }
+    description { "A test organization for running tests" }
+    active { true }
   end
 end
