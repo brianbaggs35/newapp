@@ -3,9 +3,79 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
+  test_frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install JavaScript dependencies
+        run: yarn install
+
+      - name: Run Jest tests with coverage
+        run: yarn test:coverage
+
+      - name: Run ESLint
+        run: yarn lint
+
+  test_backend:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Set up database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          RAILS_ENV: test
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:migrate
+
+      - name: Run RSpec tests with coverage
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          RAILS_ENV: test
+        run: bundle exec rspec --format RspecJunitFormatter --out tmp/rspec_results.xml
+
+      - name: Upload RSpec results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rspec-results
+          path: tmp/rspec_results.xml
+
   scan_ruby:
     runs-on: ubuntu-latest
 
@@ -22,8 +92,9 @@ jobs:
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
-  lint:
+  lint_ruby:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

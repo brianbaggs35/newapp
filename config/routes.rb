@@ -6,6 +6,13 @@ Rails.application.routes.draw do
   }
   root "homepage#index"
 
+  # Onboarding routes
+  get "/onboarding", to: "onboarding#show"
+  get "/onboarding/:step", to: "onboarding#show"
+  patch "/onboarding/organization", to: "onboarding#update_organization"
+  patch "/onboarding/profile", to: "onboarding#update_profile"
+  post "/onboarding/complete", to: "onboarding#complete"
+
   # Dashboard and user management routes
   get "/dashboard", to: "dashboard#index"
   get "/dashboard/stats", to: "dashboard#stats"
@@ -21,12 +28,17 @@ Rails.application.routes.draw do
 
   # System Admin routes
   namespace :admin do
+    get '/dashboard', to: 'dashboard#index'
     resources :users do
       member do
         patch :confirm
       end
     end
     resources :organizations
+    resources :invitation_codes, only: [:index, :create, :destroy]
+    resource :smtp_settings, only: [:show, :update] do
+      post :test_email
+    end
   end
 
   # Automated Testing Routes

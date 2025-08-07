@@ -19,11 +19,23 @@ class DashboardController < ApplicationController
 
   def stats
     if current_user.system_admin?
-      render json: calculate_system_admin_stats
+      stats = calculate_system_admin_stats
     elsif current_user.organization
-      render json: calculate_organization_stats
+      stats = calculate_organization_stats
     else
       render json: { error: 'No organization found' }, status: :unprocessable_entity
+      return
+    end
+
+    respond_to do |format|
+      format.json { render json: stats }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update("dashboard_stats", 
+            render_to_string(partial: "dashboard/stats", locals: { stats: stats }, formats: [:html])
+          )
+        ]
+      end
     end
   end
 
@@ -50,16 +62,78 @@ class DashboardController < ApplicationController
 
   def calculate_organization_stats
     org = current_user.organization
+    
+    # Automated Testing Stats
+    automated_test_runs = org.test_runs.includes(:test_results).limit(100)
+    total_automated_tests = automated_test_runs.joins(:test_results).count
+    passed_automated_tests = automated_test_runs.joins(:test_results).where(test_results: { status: 'passed' }).count
+    failed_automated_tests = automated_test_runs.joins(:test_results).where(test_results: { status: 'failed' }).count
+    automated_success_rate = total_automated_tests > 0 ? passed_automated_tests.to_f / total_automated_tests : 0
+    
+    # Manual Testing Stats  
+    manual_test_runs = org.manual_test_runs.includes(:manual_test_run_items).limit(100)
+    total_manual_test_cases = org.manual_test_cases.count
+    completed_manual_runs = manual_test_runs.where(status: 'completed').count
+    manual_success_rate = manual_test_runs.count > 0 ? completed_manual_runs.to_f / manual_test_runs.count : 0
+    
+    # Trend data for charts
+    trend_data = 7.days.ago.to_date.upto(Date.current).map do |date|
+      day_runs = automated_test_runs.where(created_at: date.beginning_of_day..date.end_of_day)
+      {
+        date: date.strftime('%Y-%m-%d'),
+        passed: day_runs.joins(:test_results).where(test_results: { status: 'passed' }).count,
+        failed: day_runs.joins(:test_results).where(test_results: { status: 'failed' }).count
+      }
+    end
+    
+    # Status distribution for manual testing
+    status_distribution = {
+      pending: manual_test_runs.where(status: 'pending').count,
+      in_progress: manual_test_runs.where(status: 'in_progress').count,
+      completed: manual_test_runs.where(status: 'completed').count,
+      blocked: manual_test_runs.where(status: 'blocked').count
+    }
+    
     {
-      totalTestSuites: org.test_suites.count,
-      totalTestCases: org.test_cases.count,
-      totalUsers: org.users.count,
-      recentTestRuns: org.test_suites.where('executed_at > ?', 7.days.ago).count,
-      passedTests: org.test_cases.where(status: 'passed').count,
-      failedTests: org.test_cases.where(status: 'failed').count,
-      successRate: calculate_success_rate(org),
-      testsThisWeek: org.test_suites.where('created_at > ?', 1.week.ago).count,
-      testsThisMonth: org.test_suites.where('created_at > ?', 1.month.ago).count
+      automated_testing: {
+        total_runs: automated_test_runs.count,
+        passed_tests: passed_automated_tests,
+        failed_tests: failed_automated_tests,
+        success_rate: automated_success_rate,
+        recent_runs: automated_test_runs.order(created_at: :desc).limit(5).map do |run|
+          passed = run.test_results.where(status: 'passed').count
+          failed = run.test_results.where(status: 'failed').count
+          {
+            id: run.uuid,
+            name: run.name || "Test Run #{run.id}",
+            status: failed > 0 ? 'failed' : 'passed',
+            passed: passed,
+            failed: failed,
+            created_at: run.created_at.iso8601
+          }
+        end,
+        trend_data: trend_data
+      },
+      manual_testing: {
+        total_test_cases: total_manual_test_cases,
+        total_runs: manual_test_runs.count,
+        completed_runs: completed_manual_runs,
+        success_rate: manual_success_rate,
+        recent_runs: manual_test_runs.order(created_at: :desc).limit(5).map do |run|
+          total_items = run.manual_test_run_items.count
+          completed_items = run.manual_test_run_items.where.not(status: 'pending').count
+          progress = total_items > 0 ? (completed_items.to_f / total_items * 100).round : 0
+          
+          {
+            id: run.uuid,
+            name: run.name || "Manual Test Run #{run.id}",
+            status: run.status,
+            progress: progress,
+            created_at: run.created_at.iso8601
+          }
+        end,
+        status_distribution: status_distribution
+      }
     }
   end
 
