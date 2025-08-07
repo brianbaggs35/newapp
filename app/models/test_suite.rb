@@ -1,6 +1,8 @@
 class TestSuite < ApplicationRecord
   belongs_to :organization
+  belongs_to :created_by, class_name: 'User', optional: true
   has_many :test_cases, dependent: :destroy
+  has_many :manual_test_cases, dependent: :destroy
   
   validates :name, presence: true, length: { minimum: 1, maximum: 255 }
   validates :project, presence: true, length: { minimum: 1, maximum: 255 }
@@ -48,5 +50,17 @@ class TestSuite < ApplicationRecord
     self.skipped_tests = test_cases.where(status: "skipped").count
     self.total_duration = test_cases.sum(:duration) || 0.0
     save!
+  end
+
+  def manual_test_case_count
+    manual_test_cases.count
+  end
+
+  def automated_test_case_count
+    test_cases.count
+  end
+
+  def all_test_case_count
+    manual_test_case_count + automated_test_case_count
   end
 end

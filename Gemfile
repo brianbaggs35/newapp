@@ -67,6 +67,30 @@ end
 # XML parsing for JUnit files
 gem "nokogiri"
 
+# UUID support and multi-tenancy
+gem "apartment"
+gem "acts_as_tenant"
+
+# File upload and processing
+gem "image_processing"
+
+# PDF generation for reports
+gem "wicked_pdf"
+gem "wkhtmltopdf-binary"
+
+# Background job processing
+gem "sidekiq"
+gem "sidekiq-cron"
+
+# Authorization and role management
+gem "cancancan"
+
+# API serialization
+gem "jsonapi-serializer"
+
+# Pagination
+gem "kaminari"
+
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"

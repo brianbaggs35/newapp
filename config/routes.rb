@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # User management routes (admin only)
+  # System Admin routes
   namespace :admin do
     resources :users do
       member do
@@ -29,62 +29,93 @@ Rails.application.routes.draw do
     resources :organizations
   end
 
-  get "newlink", to: "homepage#index"
-
-  # Test management routes
-  resources :tests, only: [ :index, :show, :destroy ] do
-    collection do
-      post :import
-      get :statistics
+  # Automated Testing Routes
+  namespace :automated_testing do
+    resources :uploads, only: [:index, :new, :create, :update, :destroy], param: :uuid do
+      collection do
+        post :process_xml
+      end
+    end
+    resources :test_results, only: [:index, :show], param: :uuid do
+      collection do
+        get :search
+      end
+    end
+    resources :failure_analysis, param: :uuid do
+      member do
+        patch :update_status
+        patch :assign
+      end
+    end
+    resources :reports, only: [:index, :show] do
+      collection do
+        post :generate
+        get :preview
+      end
     end
   end
 
   # Manual Testing Routes
-  resources :manual_test_cases do
-    collection do
-      get :statistics
-      patch :bulk_update_status
-    end
-  end
-
-  resources :test_executions do
-    member do
-      patch :update_status
-    end
-    collection do
-      get :statistics
-    end
-  end
-
-  resources :test_execution_cycles
-
-  # API Routes for manual testing
-  namespace :api do
-    resources :manual_test_cases do
+  namespace :manual_testing do
+    resources :test_cases, param: :uuid do
       collection do
-        get :statistics
-        patch :bulk_update_status
+        get :search
+        post :bulk_update
       end
-    end
-
-    resources :test_executions do
       member do
-        patch :update_status
-      end
-      collection do
-        get :statistics
+        patch :move_to_suite
       end
     end
-
-    resources :test_execution_cycles
-
-    namespace :reports do
-      get :test_execution
-      post :export
+    resources :test_suites, param: :uuid
+    resources :test_runs, param: :uuid do
+      resources :items, controller: 'test_run_items', param: :uuid do
+        member do
+          patch :update_status
+        end
+      end
+    end
+    resources :reports, only: [:index, :show] do
+      collection do
+        post :generate
+        get :preview
+      end
     end
   end
 
-  # Reports
+  # Settings Routes
+  namespace :settings do
+    resource :organization, only: [:show, :edit, :update] do
+      resources :users, except: [:new, :create] do
+        member do
+          patch :change_role
+          delete :remove
+        end
+      end
+      resources :invitations, only: [:index, :create, :destroy]
+    end
+    resource :profile, only: [:show, :edit, :update]
+    resource :password, only: [:edit, :update]
+  end
+
+  # API Routes
+  namespace :api do
+    resources :test_runs, only: [:index, :show], param: :uuid
+    resources :test_results, only: [:index, :show], param: :uuid
+    resources :manual_test_cases, param: :uuid
+    resources :manual_test_runs, param: :uuid
+    namespace :reports do
+      post :automated_test
+      post :manual_test
+    end
+  end
+
+  get "newlink", to: "homepage#index"
+
+  # Legacy routes (to be removed)
+  resources :tests, only: [ :index, :show, :destroy ]
+  resources :manual_test_cases
+  resources :test_executions
+  resources :test_execution_cycles
   resources :reports, only: [] do
     collection do
       get :test_execution
@@ -92,16 +123,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

@@ -1,0 +1,18 @@
+// Mock react-icons for testing
+import React from 'react';
+
+export const HiChartPie = (props) => <svg {...props} data-testid="hi-chart-pie" />;
+export const HiClipboard = (props) => <svg {...props} data-testid="hi-clipboard" />;
+export const HiDocument = (props) => <svg {...props} data-testid="hi-document" />;
+export const HiCog = (props) => <svg {...props} data-testid="hi-cog" />;
+export const HiUsers = (props) => <svg {...props} data-testid="hi-users" />;
+export const HiUser = (props) => <svg {...props} data-testid="hi-user" />;
+export const HiUpload = (props) => <svg {...props} data-testid="hi-upload" />;
+export const HiViewGrid = (props) => <svg {...props} data-testid="hi-view-grid" />;
+export const HiExclamation = (props) => <svg {...props} data-testid="hi-exclamation" />;
+export const HiDocumentReport = (props) => <svg {...props} data-testid="hi-document-report" />;
+export const HiPlusCircle = (props) => <svg {...props} data-testid="hi-plus-circle" />;
+export const HiPlay = (props) => <svg {...props} data-testid="hi-play" />;
+export const HiTrash = (props) => <svg {...props} data-testid="hi-trash" />;
+export const HiPencil = (props) => <svg {...props} data-testid="hi-pencil" />;
+export const HiEye = (props) => <svg {...props} data-testid="hi-eye" />;
