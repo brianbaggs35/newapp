@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Card, 
-  Tabs, 
   Badge, 
-  Button,
-  Alert
+  Button
 } from 'flowbite-react';
 import { 
   HiClipboardList, 
@@ -22,7 +20,7 @@ import TestReporting from './TestReporting';
 
 const ManualTestingDashboard = () => {
   const [activeTab, setActiveTab] = useState('test-cases');
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     totalTestCases: 145,
     pendingExecutions: 23,
     inProgress: 8,
@@ -227,28 +225,6 @@ const ManualTestingDashboard = () => {
           </Button>
         </div>
       </div>
-
-      <style jsx>{`
-        .tab-content {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .fixed button:hover {
-          transform: scale(1.1);
-          transition: transform 0.2s ease-in-out;
-        }
-      `}</style>
     </div>
   );
 };

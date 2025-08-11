@@ -3,16 +3,9 @@ import { Sidebar } from 'flowbite-react';
 import { 
   HiChartPie, 
   HiClipboard, 
-  HiDocument,
   HiCog,
-  HiUsers,
-  HiUser,
   HiUpload,
-  HiViewGrid,
-  HiExclamation,
-  HiDocumentReport,
-  HiPlusCircle,
-  HiPlay
+  HiViewGrid
 } from 'react-icons/hi';
 
 interface QANavigationProps {
@@ -24,9 +17,9 @@ interface QANavigationProps {
 }
 
 export default function QANavigation({ currentUser, currentPath }: QANavigationProps) {
-  const [isAutomatedOpen, setIsAutomatedOpen] = useState(false);
-  const [isManualOpen, setIsManualOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isAutomatedOpen] = useState(false);
+  const [isManualOpen] = useState(false);
+  const [isSettingsOpen] = useState(false);
 
   const isActive = (path: string) => currentPath.startsWith(path);
 

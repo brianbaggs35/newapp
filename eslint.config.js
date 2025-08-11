@@ -26,6 +26,11 @@ export default [
         Promise: 'readonly',
         alert: 'readonly',
         confirm: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        prompt: 'readonly',
       },
     },
     plugins: {

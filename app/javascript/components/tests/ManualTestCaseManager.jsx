@@ -6,7 +6,6 @@ import {
   Table, 
   Badge, 
   TextInput, 
-  Textarea, 
   Select, 
   Alert,
   Spinner,
