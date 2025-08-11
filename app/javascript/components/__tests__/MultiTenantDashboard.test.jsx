@@ -101,4 +101,37 @@ describe('MultiTenantDashboard', () => {
     expect(screen.getByText('No Organization')).toBeInTheDocument();
     expect(screen.getByText('Join or Create Organization')).toBeInTheDocument();
   });
+
+  it('handles API error gracefully', async () => {
+    fetch.mockRejectedValueOnce(new Error('Network error'));
+
+    render(
+      <MultiTenantDashboard 
+        currentUser={mockCurrentUser} 
+        currentOrganization={mockOrganization} 
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('An error occurred while loading the dashboard')).toBeInTheDocument();
+    });
+  });
+
+  it('handles API response error gracefully', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500
+    });
+
+    render(
+      <MultiTenantDashboard 
+        currentUser={mockCurrentUser} 
+        currentOrganization={mockOrganization} 
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Failed to load dashboard statistics')).toBeInTheDocument();
+    });
+  });
 });
