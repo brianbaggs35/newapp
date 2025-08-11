@@ -92,7 +92,7 @@ gem "wkhtmltopdf-binary"
 
 # Background job processing
 gem "sidekiq", "~> 8.0"
-gem "sidekiq-cron", "~> 2.0"
+gem "sidekiq-cron", "~> 2.3"
 
 # Authorization and role management
 gem "cancancan", "~> 3.6"
