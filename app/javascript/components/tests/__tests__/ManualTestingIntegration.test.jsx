@@ -232,7 +232,7 @@ describe('Manual Testing Components Integration', () => {
     const ErrorBoundary = ({ children }) => {
       try {
         return children;
-      } catch (error) {
+      } catch {
         return <div data-testid="error-fallback">Something went wrong</div>;
       }
     };
@@ -244,7 +244,7 @@ describe('Manual Testing Components Integration', () => {
     // This would normally show error in console, but we're testing error handling
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { getByTestId } = render(
+    render(
       <ErrorBoundary>
         <ProblematicComponent />
       </ErrorBoundary>

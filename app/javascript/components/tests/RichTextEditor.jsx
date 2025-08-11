@@ -74,11 +74,6 @@ const RichTextEditor = ({
     handleContentChange({ target: contentRef.current });
   };
 
-  const handleSelection = () => {
-    const selection = window.getSelection();
-    setSelectedText(selection.toString());
-  };
-
   const insertOrderedList = () => {
     execCommand('insertOrderedList');
   };
@@ -283,8 +278,6 @@ const RichTextEditor = ({
         style={{ minHeight: height }}
         onInput={handleContentChange}
         onKeyDown={handleKeyDown}
-        onMouseUp={handleSelection}
-        onKeyUp={handleSelection}
         dangerouslySetInnerHTML={{ __html: editorContent }}
         data-placeholder={placeholder}
         suppressContentEditableWarning={true}

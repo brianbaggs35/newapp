@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RichTextEditor from '../RichTextEditor';
 
@@ -265,7 +264,6 @@ describe('RichTextEditor', () => {
   });
 
   test('handles text selection for formatting', async () => {
-    const user = userEvent.setup();
     render(<RichTextEditor {...defaultProps} />);
 
     const editor = document.querySelector('[contenteditable="true"]');

@@ -13,11 +13,9 @@ import {
 } from 'flowbite-react';
 import { 
   HiPlay, 
-  HiPause, 
   HiCheck, 
   HiX, 
   HiClock,
-  HiUser,
   HiExclamation,
   HiRefresh,
   HiFilter,
@@ -68,11 +66,6 @@ const TestExecutionKanban = () => {
   const [showExecutionModal, setShowExecutionModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(null);
-  const [filters, setFilters] = useState({
-    priority: 'all',
-    assignee: 'all',
-    category: 'all'
-  });
 
   const [executionData, setExecutionData] = useState({
     status: '',
