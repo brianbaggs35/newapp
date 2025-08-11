@@ -12,10 +12,9 @@ import {
   Tooltip, 
   Legend 
 } from 'chart.js';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import { 
   HiTrendingUp, 
-  HiTrendingDown, 
   HiCheckCircle, 
   HiXCircle,
   HiClock,

@@ -3,7 +3,6 @@ import {
   Card, 
   Button, 
   Select,
-  DatePicker,
   Badge,
   Table,
   Spinner,
@@ -15,12 +14,8 @@ import {
   HiPrinter,
   HiChartBar,
   HiDocumentReport,
-  HiCalendar,
   HiTrendingUp,
   HiTrendingDown,
-  HiClock,
-  HiCheckCircle,
-  HiXCircle,
   HiExclamation
 } from 'react-icons/hi';
 import { 
@@ -307,26 +302,6 @@ const TestReporting = () => {
       console.error('Failed to export data:', error);
       setAlert({ type: 'failure', message: 'Failed to export data' });
     }
-  };
-
-  const getStatusIcon = (status) => {
-    const icons = {
-      passed: HiCheckCircle,
-      failed: HiXCircle,
-      blocked: HiExclamation,
-      pending: HiClock
-    };
-    return icons[status] || HiClock;
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      passed: 'success',
-      failed: 'failure',
-      blocked: 'warning',
-      pending: 'gray'
-    };
-    return colors[status] || 'gray';
   };
 
   if (loading) {

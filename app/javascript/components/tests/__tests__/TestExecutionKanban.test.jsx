@@ -17,7 +17,7 @@ jest.mock('react-beautiful-dnd', () => ({
       droppableProps: {},
       placeholder: <div data-testid={`droppable-placeholder-${droppableId}`} />
     }, { isDraggingOver: false }),
-  Draggable: ({ children, draggableId, index }) =>
+  Draggable: ({ children, _draggableId, _index }) =>
     children({
       innerRef: () => {},
       draggableProps: {},
@@ -68,7 +68,7 @@ jest.mock('flowbite-react', () => ({
       {onDismiss && <button onClick={onDismiss}>×</button>}
     </div>
   ),
-  Spinner: ({ size, light, className }) => <div className={`spinner spinner-${size} ${className}`}>Loading...</div>,
+  Spinner: ({ size, _light, className }) => <div className={`spinner spinner-${size} ${className}`}>Loading...</div>,
   Avatar: ({ img, size, rounded }) => <img src={img} className={`avatar-${size} ${rounded ? 'rounded' : ''}`} alt="avatar" />,
   Tooltip: ({ children, content }) => <div title={content}>{children}</div>
 }));
@@ -94,35 +94,6 @@ describe('TestExecutionKanban', () => {
   beforeEach(() => {
     fetch.mockClear();
   });
-
-  const mockTestCases = [
-    {
-      id: 'tc-1',
-      title: 'User Login Test',
-      description: 'Test user authentication functionality',
-      priority: 'high',
-      category: 'Authentication',
-      estimatedTime: 15,
-      assignedTo: 'john.doe@example.com',
-      status: 'todo',
-      steps: ['Navigate to login page', 'Enter credentials', 'Click login'],
-      expectedResult: 'User should be redirected to dashboard',
-      preconditions: 'User account must exist'
-    },
-    {
-      id: 'tc-2',
-      title: 'Dashboard Navigation',
-      description: 'Test dashboard navigation elements',
-      priority: 'medium',
-      category: 'UI/UX',
-      estimatedTime: 10,
-      assignedTo: 'jane.smith@example.com',
-      status: 'in-progress',
-      steps: ['Login to app', 'Navigate to dashboard', 'Click menu items'],
-      expectedResult: 'All navigation should work',
-      preconditions: 'User must be logged in'
-    }
-  ];
 
   test('renders loading state initially', () => {
     render(<TestExecutionKanban />);

@@ -9,17 +9,17 @@ global.fetch = jest.fn();
 
 // Mock Chart.js components
 jest.mock('react-chartjs-2', () => ({
-  Bar: ({ data, options }) => (
+  Bar: ({ data, _options }) => (
     <div data-testid="bar-chart">
       Bar Chart - {data.labels?.join(', ')} - {data.datasets?.[0]?.data?.join(', ')}
     </div>
   ),
-  Doughnut: ({ data, options }) => (
+  Doughnut: ({ data, _options }) => (
     <div data-testid="doughnut-chart">
       Doughnut Chart - {data.labels?.join(', ')} - {data.datasets?.[0]?.data?.join(', ')}
     </div>
   ),
-  Line: ({ data, options }) => (
+  Line: ({ data, _options }) => (
     <div data-testid="line-chart">
       Line Chart - {data.labels?.join(', ')} - {data.datasets?.[0]?.data?.join(', ')}
     </div>

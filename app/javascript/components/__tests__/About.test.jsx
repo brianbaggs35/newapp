@@ -41,4 +41,32 @@ describe('About Component', () => {
     const backButton = screen.getByText('Back to Home');
     expect(backButton).toBeInTheDocument();
   });
+
+  test('back to home button click handler works', () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: '' };
+
+    render(<About />);
+    const backButton = screen.getByText('Back to Home');
+    backButton.click();
+
+    expect(window.location.href).toBe('/');
+
+    window.location = originalLocation;
+  });
+
+  test('go back button click handler works', () => {
+    const mockBack = jest.fn();
+    const originalHistory = window.history;
+    window.history = { back: mockBack };
+
+    render(<About />);
+    const goBackButton = screen.getByText('Go Back');
+    goBackButton.click();
+
+    expect(mockBack).toHaveBeenCalled();
+
+    window.history = originalHistory;
+  });
 });

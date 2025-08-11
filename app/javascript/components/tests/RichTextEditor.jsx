@@ -19,8 +19,6 @@ const RichTextEditor = ({
 }) => {
   const [editorContent, setEditorContent] = useState(content);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [selectedText, setSelectedText] = useState('');
-  const editorRef = useRef(null);
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -74,11 +72,6 @@ const RichTextEditor = ({
     document.execCommand(command, false, value);
     contentRef.current?.focus();
     handleContentChange({ target: contentRef.current });
-  };
-
-  const handleSelection = () => {
-    const selection = window.getSelection();
-    setSelectedText(selection.toString());
   };
 
   const insertOrderedList = () => {
@@ -285,62 +278,12 @@ const RichTextEditor = ({
         style={{ minHeight: height }}
         onInput={handleContentChange}
         onKeyDown={handleKeyDown}
-        onMouseUp={handleSelection}
-        onKeyUp={handleSelection}
         dangerouslySetInnerHTML={{ __html: editorContent }}
         data-placeholder={placeholder}
         suppressContentEditableWarning={true}
       />
 
-      <style jsx>{`
-        [contenteditable]:empty:before {
-          content: attr(data-placeholder);
-          color: #9CA3AF;
-          font-style: italic;
-        }
-        
-        [contenteditable] {
-          line-height: 1.6;
-        }
-        
-        [contenteditable] p {
-          margin-bottom: 0.5rem;
-        }
-        
-        [contenteditable] ul, [contenteditable] ol {
-          margin-bottom: 0.5rem;
-          padding-left: 1.5rem;
-        }
-        
-        [contenteditable] li {
-          margin-bottom: 0.25rem;
-        }
-        
-        [contenteditable] strong {
-          font-weight: bold;
-        }
-        
-        [contenteditable] em {
-          font-style: italic;
-        }
-        
-        [contenteditable] u {
-          text-decoration: underline;
-        }
-        
-        [contenteditable] code {
-          background-color: #F3F4F6;
-          padding: 0.125rem 0.5rem;
-          border-radius: 0.25rem;
-          font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-          font-size: 0.875rem;
-        }
-        
-        [contenteditable] a {
-          color: #3B82F6;
-          text-decoration: underline;
-        }
-      `}</style>
+
     </div>
   );
 };

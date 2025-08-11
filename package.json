@@ -1,5 +1,6 @@
 {
   "name": "app",
+  "type": "module",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.23.6",

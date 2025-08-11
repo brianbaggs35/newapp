@@ -61,7 +61,7 @@ jest.mock('flowbite-react', () => ({
     </div>
   ),
   Spinner: ({ size }) => <div className={`spinner spinner-${size}`}>Loading...</div>,
-  Dropdown: ({ label, dismissOnClick, renderTrigger, children }) => (
+  Dropdown: ({ label, _dismissOnClick, renderTrigger, children }) => (
     <div className="dropdown">
       {renderTrigger ? renderTrigger() : <button>{label}</button>}
       <div className="dropdown-menu">{children}</div>
@@ -250,7 +250,6 @@ describe('ManualTestCaseManager', () => {
       json: () => Promise.resolve([])
     });
 
-    const user = userEvent.setup();
     render(<ManualTestCaseManager />);
 
     await waitFor(() => {
