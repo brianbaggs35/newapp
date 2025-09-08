@@ -65,7 +65,7 @@ group :development, :test do
 
   # RSpec for testing
   gem "rspec-rails", "~> 8.0"
-  gem "factory_bot_rails", "~> 6.4"
+  gem "factory_bot_rails", "~> 6.5"
   gem "rspec_junit_formatter", "~> 0.6"
 end
 
